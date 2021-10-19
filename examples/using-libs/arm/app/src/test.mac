@@ -1,0 +1,51 @@
+__param testName;
+__param testExpected;
+
+__var _breakID;
+__var _result;
+
+execUserSetup()
+{
+  /* Set up immediate breakpoints. */
+  _breakID = __setSimBreak("addResult", "R", "addAccess()");
+  _breakID = __setSimBreak("subResult", "R", "subAccess()");
+  _breakID = __setSimBreak("mulResult", "R", "mulAccess()");
+}
+
+Done()
+{
+  if (_result == testExpected) 
+  {
+    __message "-- C-SPY TEST:", testName, ". Result: PASS";
+  } else {
+    __message "-- C-SPY TEST:", testName, ". Expected: ", testExpected, " Result: FAIL";
+  }
+}
+
+addAccess()
+{
+  if (testName == "test_add") 
+  {
+    _result = addResult;
+    Done();
+  }
+}
+
+subAccess()
+{
+  if (testName == "test_sub") 
+  {
+    _result = subResult;
+    Done();
+  }
+}
+
+mulAccess()
+{
+  if (testName == "test_mul") 
+  {
+    _result = mulResult;
+    Done();
+  }
+}
+
