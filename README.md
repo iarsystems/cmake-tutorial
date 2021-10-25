@@ -25,39 +25,6 @@ The required tools are similar either if __Windows__ or __Linux__ is being used:
 >:warning: In order to conveniently execute __cmake__ and __ninja__ from anywhere in your system, without specifying their respective full paths, make sure their locations are in the `PATH` variable of your operating system.
 
 
-## Configuring the toolchain file
-When cross-compiling applications with CMake, an appropriate `<toolchain-file>.cmake` must be specified. 
-This file contains the toolchain's location for its compiler and assembler.
-
-This section provides a simple example of a generic __toolchain file__ for CMake that can be used along with the __IAR C/C++ Compiler__.
-
-On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file, perform the following changes to match your system:
-* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L11) with one of the valid compiler's target `<arch>`:
->`430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
-
-* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L14) to point to the location where the corresponding IAR tools are __installed__ on __your__ system:
->__Windows__ examples:
->```
->"C:/Program\ Files/IAR\ Systems/Embedded\ Workbench\ 9.0"
->```
->```
->"C:/IAR_Systems/EWARM/9.10.2"
->```
->__Linux__ examples:
->```
->"/opt/iarsystems/bxarm-9.10.2"
->```
->```
->"/opt/iarsystems/bxarm"
->```
-> __Notes__
-> * If the __IAR_INSTALL_DIR__ contains blank spaces, it might be necessary to escape them using backslashes `\ ` or, instead, use `\\`.
-> * __Do not__ include `<arch>/bin` on the __IAR_INSTALL_DIR__ variable. The `<arch>` will be automatically added in the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) variable using __CMAKE_SYSTEM_PROCESSOR__. The `/bin` sub-directory will be hardcoded to the ephemeral `PATH` environment variable used internally while CMake is running.
-
-* When using the __IAR Assembler__ for `430`, `8051`, `avr` or `v850` architecture, update [__CMAKE_ASM_COMPILER__](examples/iar-toolchain.cmake#L29) to:
->`"a${CMAKE_SYSTEM_PROCESSOR}"`
-
-
 ## Examples
 In this section you will find examples on how `CMakeLists.txt` files can be created to build __executable__ targets as well as __library__ targets. 
 
@@ -119,6 +86,40 @@ Instructions for [building](#building-projects) and [testing](#testing-projects)
 
 
 ## Building Projects
+
+### Configuring the toolchain file
+When cross-compiling applications with CMake, an appropriate `<toolchain-file>.cmake` must be specified. 
+This file contains the toolchain's location for its compiler and assembler.
+
+This section provides a simple example of a generic __toolchain file__ for CMake that can be used along with the __IAR C/C++ Compiler__.
+
+On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file, perform the following changes to match your system:
+* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L11) with one of the valid compiler's target `<arch>`:
+>`430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
+
+* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L14) to point to the location where the corresponding IAR tools are __installed__ on __your__ system:
+>__Windows__ examples:
+>```
+>"C:/Program\ Files/IAR\ Systems/Embedded\ Workbench\ 9.0"
+>```
+>```
+>"C:/IAR_Systems/EWARM/9.10.2"
+>```
+>__Linux__ examples:
+>```
+>"/opt/iarsystems/bxarm-9.10.2"
+>```
+>```
+>"/opt/iarsystems/bxarm"
+>```
+> __Notes__
+> * If the __IAR_INSTALL_DIR__ contains blank spaces, it might be necessary to escape them using backslashes `\ ` or, instead, use `\\`.
+> * __Do not__ include `<arch>/bin` on the __IAR_INSTALL_DIR__ variable. The `<arch>` will be automatically added in the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) variable using __CMAKE_SYSTEM_PROCESSOR__. The `/bin` sub-directory will be hardcoded to the ephemeral `PATH` environment variable used internally while CMake is running.
+
+* When using the __IAR Assembler__ for `430`, `8051`, `avr` or `v850` architecture, update [__CMAKE_ASM_COMPILER__](examples/iar-toolchain.cmake#L29) to:
+>`"a${CMAKE_SYSTEM_PROCESSOR}"`
+
+
 ###  Generate a <i>Project Buildsystem</i>
 The general syntax to generate the input files for a native build system is: 
 ```
