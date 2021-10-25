@@ -32,6 +32,8 @@ This file contains the toolchain's location for its compiler and assembler.
 
 This section provides a simple example of a generic __toolchain file__ for CMake that can be used along with the __IAR C/C++ Compiler__.
 
+In order to get the toolchain file with all the examples, you can clone this repository __or__, if you want to get only the files from a single example, click on its respective link in the [examples](#examples)' titles and get it bundled in a __zip__ archive.
+
 On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file, perform the following changes to match your system:
 * Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L11) with one of the valid compiler's target `<arch>`:
 >`430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
@@ -210,8 +212,6 @@ The examples work with all the architectures supported in CMake.
 __CMake 3__ has been described as the beginning of the "Modern CMake" age. Since then, it has been advised to avoid variables in favor of targets and properties. The commands __add_compile_options()__, __include_directories()__, __link_directories()__, __link_libraries()__, that were at the core of __CMake 2__, should now be replaced by target-specific commands.
 
 The __CMakeLists.txt__ in the examples use expressions that look like this `$<...>`. Those are the so-called [_generator expressions_][url-cm-docs-genex] (or _genex_, for short) and they allow us to express our intentions in many powerful ways.
-
->:warning: In order to get the all the examples, you can clone this repository __or__, if you want to get only the files from a single example, click on its respective link in the examples' titles and get it bundled in a __zip__ archive.
 
 
 ### Example 1 - [Mixing C and Assembly][url-repo-example1]
