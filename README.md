@@ -24,67 +24,6 @@ The required tools are similar either if __Windows__ or __Linux__ is being used:
 
 >:warning: In order to conveniently execute __cmake__ and __ninja__ from anywhere in your system, without specifying their respective full paths, make sure their locations are in the `PATH` variable of your operating system.
 
-
-## Examples
-In this section you will find examples on how `CMakeLists.txt` files can be created to build __executable__ targets as well as __library__ targets. 
-
-The examples work with all the architectures supported in CMake.
-
-__CMake 3__ has been described as the beginning of the "Modern CMake" age. Since then, it has been advised to avoid variables in favor of targets and properties. The commands __add_compile_options()__, __include_directories()__, __link_directories()__, __link_libraries()__, that were at the core of __CMake 2__, should now be replaced by target-specific commands.
-
-The __CMakeLists.txt__ in the examples use expressions that look like this `$<...>`. Those are the so-called [_generator expressions_][url-cm-docs-genex] (or _genex_, for short) and they allow us to express our intentions in many powerful ways.
-
->:warning: In order to get the all the examples, you can clone this repository __or__, if you want to get only the files from a single example, click on its respective link in the examples' titles and get it bundled in a __zip__ archive.
-
-
-### Example 1 - [Mixing C and Assembly][url-repo-example1]
-The [mix-c-asm](examples/mix-c-asm) project demonstrates the basic concepts on how to build a single executable target (__mixLanguages__) using __C__ and __Assembly__ sources.
-
-It also shows:
-* How to use __target_compile_definitions()__ to set preprocessor symbols that can be used in the target's sources. 
-* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
-
-Each `<arch>` has its own __CMakeLists.txt__. The file is located in the respective `<arch>` folder and has further comments. Below you will find the direct links to each of them:
-
-| [`430`][430-ex1] | [`8051`][8051-ex1] | [`arm`][arm-ex1] | [`avr`][avr-ex1] | [`riscv`][riscv-ex1] | [`rx`][rx-ex1] | [`rh850`][rh850-ex1] | [`rl78`][rl78-ex1] | [`stm8`][stm8-ex1] | [`v850`][v850-ex1] |
-| - | - | - | - | - | - | - | - | - | - |
-
-Instructions for [building](#building-projects) and [testing](#testing-projects) these projects are provided below.
-
-
-### Example 2 - [Creating and using libraries][url-repo-example2]
-The [using-libs](examples/using-libs) project demonstrates some advanced features and how to build one executable target (__myProgram__) linked against a static library target (__myMath__) using __C__ sources.
-
-It also shows:
-* How to use __set_target_properties()__ to propagate configuration details across the target options.
-* How to set __target_linker_options()__ to create a map file of the executable.
-* How to use __add_custom_target()__ for executing `ielftool` and generate an `.ihex`|`.srec`|`.bin` output. 
-* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
-
-The __myMath__ library target is located in the __lib__ subdirectory. The library contains functions which take two integer parameters to perform basic arithmetic over them, returning another integer as result. 
-
-The __myProgram__ executable target is located in the __app__ subdirectory. The program performs arithmetic operations using the __myMath__'s library functions.
-
-For each architecture, the project uses 3 __CMakeLists.txt__. These files have further comments. 
-
-* The __CMakeLists.txt__ in the __top-level__ directory:
-
-| [`430`][430-ex2-t] | [`8051`][8051-ex2-t] | [`arm`][arm-ex2-t] | [`avr`][avr-ex2-t] | [`riscv`][riscv-ex2-t] | [`rx`][rx-ex2-t] | [`rh850`][rh850-ex2-t] | [`rl78`][rl78-ex2-t] | [`stm8`][stm8-ex2-t] | [`v850`][v850-ex2-t] |
-| - | - | - | - | - | - | - | - | - | - |
-
-* The __lib/CMakeLists.txt__ for the __library__ target:
-
-| [`430`][430-ex2-l] | [`8051`][8051-ex2-l] | [`arm`][arm-ex2-l] | [`avr`][avr-ex2-l] | [`riscv`][riscv-ex2-l] | [`rx`][rx-ex2-l] | [`rh850`][rh850-ex2-l] | [`rl78`][rl78-ex2-l] | [`stm8`][stm8-ex2-l] | [`v850`][v850-ex2-l] |
-| - | - | - | - | - | - | - | - | - | - |
-
-* The __app/CMakeLists.txt__ for the __executable__ target:
-
-| [`430`][430-ex2-a] | [`8051`][8051-ex2-a] | [`arm`][arm-ex2-a] | [`avr`][avr-ex2-a] | [`riscv`][riscv-ex2-a] | [`rx`][rx-ex2-a] | [`rh850`][rh850-ex2-a] | [`rl78`][rl78-ex2-a] | [`stm8`][stm8-ex2-a] | [`v850`][v850-ex2-a] |
-| - | - | - | - | - | - | - | - | - | - |
-
-Instructions for [building](#building-projects) and [testing](#testing-projects) these projects are provided below.
-
-
 ## Building Projects
 
 ### Configuring the toolchain file
@@ -262,6 +201,63 @@ __Example 2__ - expected output:
 
 >:warning: The __IAR C-SPY Debugger__ is only available on Windows.
 
+
+## Examples
+In this section you will find examples on how `CMakeLists.txt` files can be created to build __executable__ targets as well as __library__ targets. 
+
+The examples work with all the architectures supported in CMake.
+
+__CMake 3__ has been described as the beginning of the "Modern CMake" age. Since then, it has been advised to avoid variables in favor of targets and properties. The commands __add_compile_options()__, __include_directories()__, __link_directories()__, __link_libraries()__, that were at the core of __CMake 2__, should now be replaced by target-specific commands.
+
+The __CMakeLists.txt__ in the examples use expressions that look like this `$<...>`. Those are the so-called [_generator expressions_][url-cm-docs-genex] (or _genex_, for short) and they allow us to express our intentions in many powerful ways.
+
+>:warning: In order to get the all the examples, you can clone this repository __or__, if you want to get only the files from a single example, click on its respective link in the examples' titles and get it bundled in a __zip__ archive.
+
+
+### Example 1 - [Mixing C and Assembly][url-repo-example1]
+The [mix-c-asm](examples/mix-c-asm) project demonstrates the basic concepts on how to build a single executable target (__mixLanguages__) using __C__ and __Assembly__ sources.
+
+It also shows:
+* How to use __target_compile_definitions()__ to set preprocessor symbols that can be used in the target's sources. 
+* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
+
+Each `<arch>` has its own __CMakeLists.txt__. The file is located in the respective `<arch>` folder and has further comments. Below you will find the direct links to each of them:
+
+| [`430`][430-ex1] | [`8051`][8051-ex1] | [`arm`][arm-ex1] | [`avr`][avr-ex1] | [`riscv`][riscv-ex1] | [`rx`][rx-ex1] | [`rh850`][rh850-ex1] | [`rl78`][rl78-ex1] | [`stm8`][stm8-ex1] | [`v850`][v850-ex1] |
+| - | - | - | - | - | - | - | - | - | - |
+
+Instructions for [building](#building-projects) and [testing](#testing-projects) these projects are provided below.
+
+
+### Example 2 - [Creating and using libraries][url-repo-example2]
+The [using-libs](examples/using-libs) project demonstrates some advanced features and how to build one executable target (__myProgram__) linked against a static library target (__myMath__) using __C__ sources.
+
+It also shows:
+* How to use __set_target_properties()__ to propagate configuration details across the target options.
+* How to set __target_linker_options()__ to create a map file of the executable.
+* How to use __add_custom_target()__ for executing `ielftool` and generate an `.ihex`|`.srec`|`.bin` output. 
+* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
+
+The __myMath__ library target is located in the __lib__ subdirectory. The library contains functions which take two integer parameters to perform basic arithmetic over them, returning another integer as result. 
+
+The __myProgram__ executable target is located in the __app__ subdirectory. The program performs arithmetic operations using the __myMath__'s library functions.
+
+For each architecture, the project uses 3 __CMakeLists.txt__. These files have further comments. 
+
+* The __CMakeLists.txt__ in the __top-level__ directory:
+
+| [`430`][430-ex2-t] | [`8051`][8051-ex2-t] | [`arm`][arm-ex2-t] | [`avr`][avr-ex2-t] | [`riscv`][riscv-ex2-t] | [`rx`][rx-ex2-t] | [`rh850`][rh850-ex2-t] | [`rl78`][rl78-ex2-t] | [`stm8`][stm8-ex2-t] | [`v850`][v850-ex2-t] |
+| - | - | - | - | - | - | - | - | - | - |
+
+* The __lib/CMakeLists.txt__ for the __library__ target:
+
+| [`430`][430-ex2-l] | [`8051`][8051-ex2-l] | [`arm`][arm-ex2-l] | [`avr`][avr-ex2-l] | [`riscv`][riscv-ex2-l] | [`rx`][rx-ex2-l] | [`rh850`][rh850-ex2-l] | [`rl78`][rl78-ex2-l] | [`stm8`][stm8-ex2-l] | [`v850`][v850-ex2-l] |
+| - | - | - | - | - | - | - | - | - | - |
+
+* The __app/CMakeLists.txt__ for the __executable__ target:
+
+| [`430`][430-ex2-a] | [`8051`][8051-ex2-a] | [`arm`][arm-ex2-a] | [`avr`][avr-ex2-a] | [`riscv`][riscv-ex2-a] | [`rx`][rx-ex2-a] | [`rh850`][rh850-ex2-a] | [`rl78`][rl78-ex2-a] | [`stm8`][stm8-ex2-a] | [`v850`][v850-ex2-a] |
+| - | - | - | - | - | - | - | - | - | - |
 
 ## Debugging
 When executable targets are built with __debug information__, they can be debugged with the __IAR C-SPY Debugger__, directly from the __IAR Embedded Workbench__ IDE.
