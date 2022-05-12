@@ -22,7 +22,7 @@ The required tools are similar either if __Windows__ or __Linux__ is being used:
 | CMake          | v3.22 or later | v3.22 or later |
 | Build engine   | [__Ninja__](https://ninja-build.org)  | [__Ninja__](https://ninja-build.org) |
 
->:warning: In order to conveniently execute __cmake__ and __ninja__ from anywhere in your system, without specifying their respective full paths, make sure their locations are in the `PATH` variable of your operating system.
+>:bulb: This tutorial assumes that [`cmake`](https://cmake.org/install/) and [`ninja`](https://ninja-build.org/#:~:text=Getting%20Ninja,system%27s%20package%20manager) are already installed. On Linux-based systems, the full path for the locations where they were installed are normally found on the default search path so that both can be executed directly from anywhere in the system. Although, on Windows-based systems, this is not always the case. It is recommended that their respective locations are on the search path, defined by the __PATH__ environment variable. The same recommendation applies for when using `cmake.exe` with other generators such as `make.exe`. Under such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately during the toolchain configuration step with a corresponding error message (e.g. "_CMAKE_MAKE_PROGRAM not found_").
 
 ## Building Projects
 
