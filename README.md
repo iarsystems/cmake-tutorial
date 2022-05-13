@@ -38,48 +38,43 @@ On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file, perfor
 * Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L11) with one of the valid compiler's target `<arch>`:
 >`430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
 
-* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L14) to point to the location where the corresponding IAR tools are __installed__ on __your__ system:
->__Windows__ examples:
->```
->"C:/Program\ Files/IAR\ Systems/Embedded\ Workbench\ 9.0"
->```
->```
->"C:/IAR_Systems/EWARM/9.10.2"
->```
->__Linux__ examples:
->```
->"/opt/iarsystems/bxarm-9.10.2"
->```
->```
->"/opt/iarsystems/bxarm"
->```
-> __Notes__
-> * If the __IAR_INSTALL_DIR__ contains blank spaces, it might be necessary to escape them using backslashes `\ ` or, instead, use `\\`.
-> * __Do not__ include `<arch>/bin` on the __IAR_INSTALL_DIR__ variable. The `<arch>` will be automatically added in the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) variable using __CMAKE_SYSTEM_PROCESSOR__. The `/bin` sub-directory will be hardcoded to the ephemeral `PATH` environment variable used internally while CMake is running.
+* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L14) to match the corresponding location where the active product was __installed__ on __your__ system, adjusting as needed. Below you will find some general examples for Windows and Linux:
+
+| IAR_INSTALL_DIR example for     | Windows tools                                               | Linux tools               |
+| ------------------------------- | ----------------------------------------------------------- | ------------------------- |
+| a typical installation location | `"C:/Program\ Files/IAR\ Systems/Embedded\ Workbench\ N.n"` | `"/opt/iarsystems/bxarm"` |
+| a custom installation location  | `"C:/IAR_Systems/EWARM/N.nn.n"`                             | Not applicable            |
+
+> __Notes on IAR_INSTALL_DIR__
+> * Replace `N.nn` by the active product's corresponding version.
+> * If the path contains blank spaces, escape them with backslashes (`\ `).
+> * The [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) is a variable that points to the directory of the active product. (e.g. `"${IAR_INSTALL_DIR}/${CMAKE_SYSTEM_PROCESSOR}"`).
+> * The __TOOLKIT_DIR__ variable is used to set the [PATH](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L20-L24) environment variable with the `bin` directory so that the compiler can be found on the search path. Setting the PATH with this method lasts for the time CMake is running.
 
 * When using the __IAR Assembler__ for `430`, `8051`, `avr` or `v850` architecture, update [__CMAKE_ASM_COMPILER__](examples/iar-toolchain.cmake#L29) to:
 >`"a${CMAKE_SYSTEM_PROCESSOR}"`
 
 
-###  Generate a <i>Project Buildsystem</i>
-The general syntax to generate the input files for a native build system is: 
-```
-cmake -G <generator> -B <build-dir> --toolchain <file>
-```
+###  Configuring the build system generator
+Once the toolchain file is modified, the next step for when cross-compiling with CMake is the configuration step. Among other possibilities, here is possible to choose which _build system generator_ and _toolchain file_ should be used for a project. A project is defined by one or more CMakeLists.txt file(s). Details about these files can be found in the [examples](#examples) section.
 
-|__Option__     | __Explanation__                                                                                                         | 
-| :------------ | :---------------------------------------------------------------------------------------------------------------------- |
-| `-B`          | Explicitly specify a build directory.                                                                                   |
-| `-G`          | Specify a generator name.                                                                                               |
-| `--toolchain` | Specify the toolchain file `[CMAKE_TOOLCHAIN_FILE]`                                                                     |
+The simplified general syntax for the configuration step is: `cmake -G <generator> -B <build-dir> --toolchain <file>`.
 
-In this example we will use the __Ninja__ generator. Once the toolchain file is modified, inside each example's __architecture__ subdirectory, use the following command to generate the build scripts in the `_builds`  sub-directory:
+|__Option__     | __Explanation__                                       | 
+| :------------ | :---------------------------------------------------- |
+| `-B`          | Explicitly specify a build directory.                 |
+| `-G`          | Specify a build system generator.                     |
+| `--toolchain` | Specify the toolchain file `[CMAKE_TOOLCHAIN_FILE]`   |
+
+>:bulb: Use `cmake --help` for more information.
+
+In this example we will take advantage of the `"Ninja Multi-Config"` generator option. This option can be used to generate build configurations for "Debug" and "Release" purposes.  From inside each example's __architecture__ subdirectory you will find a corresponding CMakeLists.txt. From that location, use the following command to generate the scripts for the build system in the `_builds`  sub-directory:
 ```
 cmake -G "Ninja Multi-Config" -B_builds --toolchain ../../iar-toolchain.cmake
 ```
 The expected output is similar to:
 >```
->-- The C compiler identification is IAR <ARCH> <VERSION>
+>-- The C compiler identification is IAR <ARCH> N.nn
 >-- Detecting C compiler ABI info
 >-- Detecting C compiler ABI info - done
 >-- Check for working C compiler: C:/<install-path>/<arch>/bin/icc<arch>.exe - skipped
@@ -90,15 +85,13 @@ The expected output is similar to:
 >-- Build files have been written to: C:/<...>/cmake-tutorial/examples/<example>/<arch>/_builds
 >```
 
->:warning: Once the `_builds` is configured, there is no need to re-run the configuration step, except if there are changes to the toolchain file.
+>:bulb: Once the `_builds` is configured, there is no need to re-run the configuration step, except if there are changes to the toolchain file.
 
->:warning: If for some reason the configuration step fails, try removing the `_builds` subdirectory before running it again, in order to avoid any potential cache misses.  
+>:warning: If for some mistake the configuration step fails (e.g. wrong option, wrong selection, etc.), it might be necessary to remove the `_builds` subdirectory before trying again. This helps CMake to avoid potential cache misses interfering during a new attempt.
 
 ### Build the project
-The general syntax to __build__ a project through CMake is:
-```
-cmake --build <build-dir> --config <cfg> [extra-options]
-```
+The general syntax to __build__ a project through CMake is: `cmake --build <build-dir> --config <cfg> [extra-options]`
+
 |__Option__                            | __Explanation__                                                                     | 
 | :----------------------------------- | :---------------------------------------------------------------------------------- |
 | `--build`                            | Build a CMake-generated project binary tree.                                        |
