@@ -5,6 +5,11 @@ project (Example2
   VERSION 1.0.0
   LANGUAGES C )
 
+# Fallback option for generators other than `Ninja Multi-Config`
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 # Enable CTest
 enable_testing()
 
