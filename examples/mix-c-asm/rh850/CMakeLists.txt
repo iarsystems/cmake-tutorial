@@ -6,7 +6,12 @@ project(Example1
   DESCRIPTION "Mixing C and Assembly"
   VERSION 1.0.0
   LANGUAGES C ASM )
-  
+
+# Fallback option for generators other than `Ninja Multi-Config`
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 # Add the executable for the "mixLanguages" target,
 # specifying its source files
 add_executable(mixLanguages

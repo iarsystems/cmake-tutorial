@@ -7,6 +7,11 @@ project(Example1
   VERSION 1.0.0
   LANGUAGES C ASM )
 
+# Fallback option for generators other than `Ninja Multi-Config`
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 # Set multiple configuration types for multi-config generators
 set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;MinSizeRel")
   
