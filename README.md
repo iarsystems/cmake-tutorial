@@ -47,8 +47,8 @@ On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from th
 >| a typical installation location | `"C:/Program Files/IAR Systems/Embedded Workbench N.n"`     | `"/opt/iarsystems/bx<arch>-N.nn.n"` |
 >| a custom installation location  | `"C:/IAR_Systems/EWARM/N.nn.n"`                             | Not applicable                      | 
 > * Replace `N.nn[.n]` or `<arch>` by the actual version or package of the active product.
-> * The __IAR_INSTALL_DIR__ is used to set the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) variable.
-> * The __TOOLKIT_DIR__ variable is used to set the [PATH](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L20-L24) environment variable with the `bin` directory so that the compiler can be found on the search path. Setting the PATH with this method lasts for the time CMake is running.
+> * The __IAR_INSTALL_DIR__ is used to set the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/v2022.06/examples/iar-toolchain.cmake#L17) variable.
+> * The __TOOLKIT_DIR__ variable is used to set the [PATH](https://github.com/IARSystems/cmake-tutorial/blob/v2022.06/examples/iar-toolchain.cmake#L20-L24) environment variable with the `bin` directory so that the compiler can be found on the search path. Setting the PATH with this method lasts for the time CMake is running.
    
 </details>
    
