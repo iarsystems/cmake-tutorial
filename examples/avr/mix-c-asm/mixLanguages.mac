@@ -1,0 +1,33 @@
+__param testName;
+__param testExpected;
+
+__var _breakID;
+__var _result;
+
+execUserSetup()
+{
+  __message "C-SPY TEST: started...";
+  __message "C-SPY TEST: When the `answer` variable is read, `checkanswer()` will execute.";
+  _breakID = __setSimBreak("answer", "R", "checkAnswer()");
+}
+
+Done()
+{
+  __message "-- C-SPY TEST: Done()";
+  if (_result == testExpected) 
+  {
+    __message "-- C-SPY TEST:", testName, ". Result: PASS";
+  } else {
+    __message "-- C-SPY TEST:", testName, ". Expected: ", testExpected, " Result: FAIL";
+  }
+}
+
+checkAnswer()
+{
+  __message "-- C-SPY TEST: checkAnswer()";
+  if (testName == "test_mynum") 
+  {
+    _result = answer;
+    Done();
+  }
+}
