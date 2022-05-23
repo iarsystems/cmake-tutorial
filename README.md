@@ -1,176 +1,209 @@
-# Tutorial<br>Building and testing with the IAR Systems tools in CMake
+# Tutorial <br>Building and testing with the IAR Systems tools in CMake
 
-If you end up with a question or suggestion specifically related to [__this tutorial__][url-repo-home], you might be interested in verifying if it was already discussed in [earlier issues][url-repo-issue-old]. If you could not find what you are looking for, feel free to [create a new issue][url-repo-issue-new]. 
+[CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process through simple configuration files to generate native build scripts for a chosen build system (e.g. ninja, make, etc.). For full documentation visit the [CMake Documentation Page][url-cm-docs].
 
-It is possible to receive [notifications][url-gh-docs-notify] about updates to this tutorial directly in your GitHub inbox by starting to __watch__ this repository. 
-
-## Introduction
-[CMake][url-cm-home] is a cross-platform, open-source _build system generator_. CMake is maintained and supported by [Kitware][url-cm-kitware]. It is developed in collaboration with a productive community of contributors.
-
-For full documentation visit the [CMake Documentation Page][url-cm-docs].
-
-The core ideas in this tutorial, inspired by the [Technical Note 190701][url-iar-docs-tn190701], serve as a mini-guide on how CMake can be used alongside the __IAR C/C++ Compiler__ to cross-compile embedded software applications.
-
-__This tutorial assumes that the reader is familiar with the usage of the IAR Systems tools, as well as with the Kitware tools, from their respective command-line interfaces.__
+This tutorial serves as a mini-guide on the ways CMake can be used alongside the __IAR C/C++ Compilers__ to cross-compile embedded software applications for the supported target architectures.
+The core ideas presented were inspired by the [Technical Note 190701][url-iar-docs-tn190701].
 
 
-## Required tools
-The required tools are similar either if __Windows__ or __Linux__ is being used:
-| __Tool__       | __Windows__ | __Linux__ |
-|----------------|-------------|-----------|
-| IAR C/C++ Compiler for...  | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`,<br/>`8051`, `AVR`, `MSP430`, `STM8` or `V850` | `Arm`, `RISC-V`, `RL78`, `RX` or `RH850` |
-| CMake          | v3.22 or later | v3.22 or later |
+## Pre-requisites
+This tutorial assumes that:
+
+* __The reader is familiar with the usage of the IAR Systems tools, as well as with the Kitware tools, from their respective command-line interfaces.__
+
+* This repository is cloned to the development computer (alternatively it can be downloaded as a zip archive via the __Code__ button).
+
+* The required tools are already installed in the system, according to the table below:
+
+| __Tool__       | __Windows-based systems__ | __Linux-based systems__ |
+|----------------|---------------------------|-------------------------|
+| IAR C/C++ Compiler for...  | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`, <br>`8051`, `AVR`, `MSP430`, `STM8` or `V850` | `Arm`, `RISC-V`, `RL78`, `RX` or `RH850` |
+| CMake          | v3.23 or later | v3.23 or later |
 | Build engine   | [__Ninja__](https://ninja-build.org)  | [__Ninja__](https://ninja-build.org) |
 
->:bulb: This tutorial assumes that [`cmake`](https://cmake.org/install/) and [`ninja`](https://ninja-build.org/#:~:text=Getting%20Ninja,system%27s%20package%20manager) are already installed. On Linux-based systems, the full path for the locations where they were installed are normally found on the default search path so that both can be executed directly from anywhere in the system. Although, on Windows-based systems, this is not always the case. It is recommended that their respective locations are on the search path, defined by the __PATH__ environment variable. The same recommendation applies for when using `cmake.exe` with other generators such as `make.exe`. Under such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately during the toolchain configuration step with a corresponding error message (e.g. "_CMAKE_MAKE_PROGRAM not found_").
+>:bulb: On Linux-based systems, [`cmake`](https://cmake.org/install/) and [`ninja`](https://ninja-build.org/#:~:text=Getting%20Ninja,system%27s%20package%20manager) are normally found on the default search path so that both can be executed directly from anywhere in the system. Although, on Windows-based systems, this is not always the case. It is recommended that their respective locations are on the search path, defined by the __PATH__ environment variable. The same recommendation applies for when using `cmake.exe` with other generators such as `"Unix Makefiles"` that relies on `make.exe` as build system. Under such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately during the toolchain configuration step with a corresponding error message (e.g. "_CMAKE_MAKE_PROGRAM not found_").
+
 
 ## Building Projects
+To build a project developed with the IAR Compiler using CMake we need at least
+* A toolchain file
+* A CMakeLists.txt file
+* The source code
 
 ### Configuring the toolchain file
-When cross-compiling applications with CMake, an appropriate `<toolchain-file>.cmake` must be specified. 
-This file contains the toolchain's location for its compiler and assembler.
+By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to indicate the desired toolchain's location for its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ Compilers__.
 
-This section provides a simple example of a generic __toolchain file__ for CMake that can be used along with the __IAR C/C++ Compiler__.
+On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from the repository you have cloned, perform the following changes to match your system:
+* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#5) replacing `<arch>` by the corresponding compiler's target architecture: `430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
 
-In order to get the toolchain file with all the examples, you can clone this repository __or__, if you want to get only the files from a single example, click on its respective link in the [examples](#examples)' titles and get it bundled in a __zip__ archive.
+* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L8) to match the corresponding location where the active product was __installed__ on __your__ system, adjusting as needed.
 
-On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file, perform the following changes to match your system:
-* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L11) with one of the valid compiler's target `<arch>`:
->`430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
+<details> <summary><b>Notes on IAR_INSTALL_DIR</b> (Click to unfold)</summary>
 
-* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L14) to match the corresponding location where the active product was __installed__ on __your__ system, adjusting as needed. Below you will find some general examples for Windows and Linux:
-
-| IAR_INSTALL_DIR example for     | Windows tools                                               | Linux tools               |
-| ------------------------------- | ----------------------------------------------------------- | ------------------------- |
-| a typical installation location | `"C:/Program\ Files/IAR\ Systems/Embedded\ Workbench\ N.n"` | `"/opt/iarsystems/bxarm"` |
-| a custom installation location  | `"C:/IAR_Systems/EWARM/N.nn.n"`                             | Not applicable            |
-
-> __Notes on IAR_INSTALL_DIR__
-> * Replace `N.nn` by the active product's corresponding version.
-> * If the path contains blank spaces, escape them with backslashes (`\ `).
-> * The [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) is a variable that points to the directory of the active product. (e.g. `"${IAR_INSTALL_DIR}/${CMAKE_SYSTEM_PROCESSOR}"`).
+>Below you will find some general examples for Windows and Linux:
+> 
+>| IAR_INSTALL_DIR example for     | Windows tools                                               | Linux tools                         |
+>| ------------------------------- | ----------------------------------------------------------- | ----------------------------------- |
+>| a typical installation location | `"C:/Program Files/IAR Systems/Embedded Workbench N.n"`     | `"/opt/iarsystems/bx<arch>-N.nn.n"` |
+>| a custom installation location  | `"C:/IAR_Systems/EWARM/N.nn.n"`                             | Not applicable                      | 
+> * Replace `N.nn[.n]` or `<arch>` by the actual version or package of the active product.
+> * The __IAR_INSTALL_DIR__ is used to set the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L17) variable.
 > * The __TOOLKIT_DIR__ variable is used to set the [PATH](https://github.com/IARSystems/cmake-tutorial/blob/1.0.0/examples/iar-toolchain.cmake#L20-L24) environment variable with the `bin` directory so that the compiler can be found on the search path. Setting the PATH with this method lasts for the time CMake is running.
+   
+</details>
+   
+### Configuring a minimal project
+A project is defined by one or more CMakeLists.txt file(s). Let's understand how a project can be configured with a simple example for the Arm target architecture. 
 
-* When using the __IAR Assembler__ for `430`, `8051`, `avr` or `v850` architecture, update [__CMAKE_ASM_COMPILER__](examples/iar-toolchain.cmake#L29) to:
->`"a${CMAKE_SYSTEM_PROCESSOR}"`
+* Inside the [examples/arm](examples/arm) directory, create a new subdirectory named __hello-world__:
+```
+> cd /path/to/cmake-tutorial/examples/arm
+> mkdir hello-world
+> cd hello-world   
+```   
+* Create the __CMakeLists.txt__ file:
+```cmake
+# CMake requires to set its minimum required version
+cmake_minimum_required(VERSION 3.23)
 
+# Set the project name, enabling its required languages (e.g. ASM, C and/or CXX)   
+project(simpleProject LANGUAGES C)
 
+# Add a executable target named "hello-world"
+add_executable(hello-world
+   # Target sources
+   main.c)
+   
+# Set the target's compiler options
+target_compile_options(hello-world PRIVATE --cpu=Cortex-M4 --fpu=VFPv4_sp --dlib_config normal)   
+   
+# Set the target's linker options
+target_link_options(hello-world PRIVATE --semihosting --config ${TOOLKIT_DIR}/config/linker/ST/stm32f407xG.icf)
+```
+> :bulb: Adjust the target compile/link options for architectures other than __arm__. 
+
+* Finally create a simple __main.c__ source file:
+```c
+#include <intrinsics.h>
+#include <stdio.h>
+   
+void main() {
+   while (1) {
+     printf("Hello world!\n");
+     __no_operation();
+   }
+}   
+```
+   
 ###  Configuring the build system generator
-Once the toolchain file is modified, the next step for when cross-compiling with CMake is the configuration step. Among other possibilities, here is possible to choose which _build system generator_ and _toolchain file_ should be used for a project. A project is defined by one or more CMakeLists.txt file(s). Details about these files can be found in the [examples](#examples) section.
+Once we have our minimal project with a suitable toolchain file, we invoke CMake to configure our build environment for when cross-compiling, choosing which _build system generator_ and which _toolchain file_ should be used for the project.
 
-The simplified general syntax for the configuration step is: `cmake -G <generator> -B <build-dir> --toolchain <file>`.
-
-|__Option__     | __Explanation__                                       | 
-| :------------ | :---------------------------------------------------- |
-| `-B`          | Explicitly specify a build directory.                 |
-| `-G`          | Specify a build system generator.                     |
-| `--toolchain` | Specify the toolchain file `[CMAKE_TOOLCHAIN_FILE]`   |
-
->:bulb: Use `cmake --help` for more information.
-
-In this example we will take advantage of the `"Ninja Multi-Config"` generator option. This option can be used to generate build configurations for "Debug" and "Release" purposes.  From inside each example's __architecture__ subdirectory you will find a corresponding CMakeLists.txt. From that location, use the following command to generate the scripts for the build system in the `_builds`  sub-directory:
+In this example we will take advantage of the `"Ninja Multi-Config"` generator option. This option can be used to generate build configurations for "Debug" and "Release" purposes. The general recommendation when using CMake is to perform an "out-of-source" build, which means creating a subdirectory for the output files.
+ 
+ * Use the following command to generate the scripts for the build system inside the `_builds` subdirectory:
 ```
-cmake -G "Ninja Multi-Config" -B_builds --toolchain ../../iar-toolchain.cmake
+cmake -B_builds -G "Ninja Multi-Config" --toolchain /path/to/iar-toolchain.cmake
 ```
-The expected output is similar to:
+>:bulb: Use `cmake --help` for more information.   
+
+<details><summary><b>Expected output example</b> (click to unfold):</summary>
+   
 >```
->-- The C compiler identification is IAR <ARCH> N.nn
+>-- The C compiler identification is IAR ARM N.nn
 >-- Detecting C compiler ABI info
 >-- Detecting C compiler ABI info - done
->-- Check for working C compiler: C:/<install-path>/<arch>/bin/icc<arch>.exe - skipped
+>-- Check for working C compiler: /path/to/toolkit_dir/bin/iccarm.exe - skipped
 >-- Detecting C compile features
 >-- Detecting C compile features - done
 >-- Configuring done
 >-- Generating done
->-- Build files have been written to: C:/<...>/cmake-tutorial/examples/<example>/<arch>/_builds
+>-- Build files have been written to: /path/to/cmake-tutorial/examples/arm/hello-world/_builds
 >```
-
->:bulb: Once the `_builds` is configured, there is no need to re-run the configuration step, except if there are changes to the toolchain file.
+   
+</details>
 
 >:warning: If for some mistake the configuration step fails (e.g. wrong option, wrong selection, etc.), it might be necessary to remove the `_builds` subdirectory before trying again. This helps CMake to avoid potential cache misses interfering during a new attempt.
 
-### Build the project
-The general syntax to __build__ a project through CMake is: `cmake --build <build-dir> --config <cfg> [extra-options]`
-
-|__Option__                            | __Explanation__                                                                     | 
-| :----------------------------------- | :---------------------------------------------------------------------------------- |
-| `--build`                            | Build a CMake-generated project binary tree.                                        |
-| `--config`                           | For multi-configuration tools, choose `<cfg>`.                                      |
-| `--parallel [<jobs>]`                | Build in parallel using the given number of `<jobs>`.                               |
-| `--clean-first`                      | Build target 'clean' first, then build.<br> (To clean only, use `--target clean`.)  |
-| `--verbose`                          | Enable verbose output - if supported - including the build commands to be executed. |
-
-Once the build tree is configured, inside each example's __architecture__ subdirectory, use the following command line to build the project:
+### Building the project
+* Once the `_builds` tree is configured, use CMake with the `--build` flag to build the project:
 ```
-cmake --build _builds --config <Debug|Release>
+cmake --build _builds
 ```
+>:bulb: Use `cmake --help` for more information.   
 
-### Convert the output
-Optionally, there is an additional target named __ielftool__ for the [using-libs](examples/using-libs) examples.
-
-The __ielftool__ target executes the __IAR ELF Tool__ in order to convert the default ELF output to the selected format. The output format parameter can be set to the preferred format in the target's __FORMAT__ property which accepts formats such as _Intel-extended_, _Motorola S-record_ or _binary_.
-
-Inside each architecture's project example directory, the following command can be used to create the additional output: 
-```
-cmake --build _builds --config <Debug|Release> --target=ielftool
-```
-
->:warning: The __ielftool__ target is not available for architectures using the UBROF format, created by the __IAR XLINK Linker__. 
-
-
-## Testing Projects
-__CTest__ is an extension of CMake that can help when performing automated tests.
-
-The __enable_testing()__ command in the CMakeLists.txt file enables CTest. Once CTest is enabled, the __add_test()__ command can be used with executable targets.
-
-In its conception, a test in CTest allows desktop software developers to execute the target directly on the host computer, evaluating its exit code. 
-
-Although, in cross-compiling scenarios, it is not possible to execute embedded software for the target architecture directly from the host computer. So we need a slightly different concept in order to execute embedded software from CTest.
-
-The situation narrows down to the following question: what about if we can execute from a simulator, or perhaps, directly from the target itself? 
-
-Here is where the  __IAR C-SPY Debugger__ comes into play. One possibility for us is to create custom macros in the __CMakeLists.txt__ of the executable targets. In the examples, the custom macro named __add_test_cspy()__ illustrates such a concept. The custom macro will create the command line to execute the target with [`CSpyBat.exe`][url-iar-docs-cspybat].
-
-The syntax for the __add_test_cspy()__ in the examples is simple:
-```cmake 
-add_test_cspy(TESTNAME EXPECTED_VALUE)
-```
-|__Parameter__                   | __Explanation__                                                                     | 
-| :----------------------------- | :---------------------------------------------------------------------------------- |
-| `TESTNAME`                     | A name for the test.                                                                |
-| `EXPECTED_VALUE`               | Output anything outputted by the test program if the test should fail.              |
-
-The general syntax to __test__ one of the example projects using __CTest__ is:
-```
-ctest --test-dir _builds --build-config Debug --output-on-failure --timeout 10
-```
-|__Option__                      | __Explanation__                                                                     | 
-| :----------------------------- | :---------------------------------------------------------------------------------- |
-| `--test-dir`                   | Specify the directory in which to look for tests.                                   |
-| `--output-on-failure`          | Output anything outputted by the test program if the test should fail.              |
-| `--timeout <seconds>`          | Set the default test timeout.                                                       |
-
->:warning: When testing, make sure to use targets built with __debug information__.
-
-### How it works?
-In the CMakeLists.txt for the executable targets, the __add_test_cspy()__ macro composes the command-line which will invoke __IAR C-SPY Debugger__. The flags `--macro=<file>.mac` and `--macro-param="variable=value"` are appended to the command-line. These flags forward the test parameters to the example's  __[C-SPY Macro][url-iar-docs-macros] file__ (`test.mac`), which will monitor the function's result and then print out a `__message` with __PASS__ or __FAIL__. Whenever CTest detects a message containing __PASS__, it will consider the test successful. This feature shows how powerful and flexible a C-SPY Macro can be. The general syntax in the C-SPY macro system resembles parts of the C Language itself. One of the favorable aspects of using such macros like this, is that they do __not__ impose code overhead to the target executable itself.
-
-__Example 1__ - expected output:
+<details><summary><b>Expected output example</b> (click to unfold):</summary>
+   
 >```
->Internal ctest changing into directory: C:/<...>/cmake-tutorial/examples/mix-c-asm/<arch>/_builds
-   >Test project C:/<...>/cmake-tutorial/examples/mix-c-asm/</arch>/_builds
+>[2/2] Linking C executable Debug\hello-world.elf
+>```
+   
+</details>   
+  
+In the minimal example we had an initial overview of what is needed to bootstrap a CMake project for a simple executable. Targets created from actual embedded software projects will typically require preprocessor symbols, compiler flags, linker flags and extended options. Additional project examples for the target architectures supported in CMake are provided as reference in the "[Examples](#examples)" section of this tutorial.
+
+
+## Examples
+Now that you know how to _configure_ and _build_ embedded projects developed with the IAR tools using CMake, you can start to explore how projects can be configured in greater detail using the previously acquired knowledge.
+   
+In this section you will find descriptions for the provided [examples](examples). Each __architecture__ (__\<arch\>__) subdirectory contains multiple examples.
+   
+Optionally, each example's CMakeLists.txt for executable targets comes with a line `include(/path/to/iar-cspy-<arch>.cmake)` in the end as an example that illustrates how to use CTest to invoke the __IAR C-SPY Command-line Utility__ ([`cspybat.exe`][url-iar-docs-cspybat]) to perform automated tests using [macros][url-iar-docs-macros].
+
+### Example 1 - Mixing C and Assembly
+The __examples/\<arch\>/mix-c-asm__ example project demonstrates the basic concepts on how to build a single executable target (__mixLanguages__) using __C__ and __Assembly__ sources.
+
+It also shows:
+* How to use `target_compile_definitions()` to set preprocessor symbols that can be used in the target's sources. 
+
+
+### Example 2 - Creating and using libraries
+The __examples/\<arch\>/using-libs__ example project demonstrates some advanced features and how to build one executable target (__myProgram__) linked against a static library target (__myMath__) using __C__ sources.
+
+The top-level directory contains a __CMakeLists.txt__ file that will add the __lib__ and the __app__ subdirectories, each one containing its own __CMakeLists.txt__.
+   
+The __myMath__ library target is located in the __lib__ subdirectory. The library contains functions which take two integer parameters to perform basic arithmetic over them, returning another integer as result. 
+
+The __myProgram__ executable target is located in the __app__ subdirectory. The program performs arithmetic operations using the __myMath__'s library functions.
+
+It also shows:
+* How to use `set_target_properties()` to propagate configuration details across the target options.
+* How to set `target_link_options()` to create a map file of the executable.
+* How to use `add_custom_command()` for generating .bin/.hex/.srec outputs using `ielftool`. 
+
+   
+### Testing the examples
+CTest is an extension of CMake that can help when performing automated tests. In its conception, a test in CTest allows desktop software developers to execute the target directly on the host computer, evaluating its exit code.
+   
+When cross-compiling, it is not possible to execute the target executable directly from the host computer. However it is possible to execute the target with the __IAR C-SPY Debugger__ using, for example, a custom function that wraps the needed parameters (e.g. `iar_cspy_add_test()`). A module named `iar-cspy-<arch>.cmake` was included in the CMakeLists.txt files for executable targets and illustrates such a concept.
+   
+>:warning: This section requires the __IAR C-SPY Command Line Utility__ (`cspybat.exe`), which is available with the __IAR Embedded Workbench__ products.   
+
+* Test the desired project example (*built with debug information) by executing:
+ ```
+ ctest --test-dir _builds --build-config Debug --output-on-failure --timeout 10
+ ```
+>:bulb: Use `ctest --help` for more information.
+   
+<details><summary>Expected output - <b>Example 1</b> (click to unfold):</summary>
+   
+>```
+>Internal ctest changing into directory: C:/path/to/cmake-tutorial/examples/<arch>/mix-c-asm/_builds
+>Test project C:/path/to/cmake-tutorial/examples/<arch>/mix-c-asm/_builds
 >    Start 1: test_mynum
->1/1 Test #1: test_mynum .......................   Passed    0.19 sec
+>1/1 Test #1: test_mynum .......................   Passed    0.20 sec
 >
 >100% tests passed, 0 tests failed out of 1
 >
->Total Test time (real) =   0.20 sec
+>Total Test time (real) =   0.25 sec
 >```
-
-__Example 2__ - expected output:
+   
+</details>   
+   
+<details><summary>Expected output - <b>Example 2</b> (click to unfold):</summary>
+   
 >```
->Internal ctest changing into directory: C:/<...>/cmake-tutorial/examples/using-libs/<arch>/_builds
->Test project C:/<...>/cmake-tutorial/examples/using-libs/<arch>/_builds
+>Internal ctest changing into directory: C:/path/to/cmake-tutorial/examples/<arch>/using-libs/_builds
+>Test project C:/path/to/cmake-tutorial/examples/<arch>/using-libs/_builds
 >    Start 1: test_add
 >1/3 Test #1: test_add .........................   Passed    0.44 sec
 >    Start 2: test_sub
@@ -193,69 +226,19 @@ __Example 2__ - expected output:
 >          2 - test_sub (Failed)
 >Errors while running CTest
 >```
+   
+</details>      
 
->:warning: The __IAR C-SPY Debugger__ is only available on Windows.
-
-
-## Examples
-In this section you will find examples on how `CMakeLists.txt` files can be created to build __executable__ targets as well as __library__ targets. 
-
-The examples work with all the architectures supported in CMake.
-
-__CMake 3__ has been described as the beginning of the "Modern CMake" age. Since then, it has been advised to avoid variables in favor of targets and properties. The commands __add_compile_options()__, __include_directories()__, __link_directories()__, __link_libraries()__, that were at the core of __CMake 2__, should now be replaced by target-specific commands.
-
-The __CMakeLists.txt__ in the examples use expressions that look like this `$<...>`. Those are the so-called [_generator expressions_][url-cm-docs-genex] (or _genex_, for short) and they allow us to express our intentions in many powerful ways.
-
-
-### Example 1 - [Mixing C and Assembly][url-repo-example1]
-The [mix-c-asm](examples/mix-c-asm) project demonstrates the basic concepts on how to build a single executable target (__mixLanguages__) using __C__ and __Assembly__ sources.
-
-It also shows:
-* How to use __target_compile_definitions()__ to set preprocessor symbols that can be used in the target's sources. 
-* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
-
-Each `<arch>` has its own __CMakeLists.txt__. The file is located in the respective `<arch>` folder and has further comments. Below you will find the direct links to each of them:
-
-| [`430`][430-ex1] | [`8051`][8051-ex1] | [`arm`][arm-ex1] | [`avr`][avr-ex1] | [`riscv`][riscv-ex1] | [`rx`][rx-ex1] | [`rh850`][rh850-ex1] | [`rl78`][rl78-ex1] | [`stm8`][stm8-ex1] | [`v850`][v850-ex1] |
-| - | - | - | - | - | - | - | - | - | - |
-
-Instructions for [building](#building-projects) and [testing](#testing-projects) these projects are provided below.
-
-
-### Example 2 - [Creating and using libraries][url-repo-example2]
-The [using-libs](examples/using-libs) project demonstrates some advanced features and how to build one executable target (__myProgram__) linked against a static library target (__myMath__) using __C__ sources.
-
-It also shows:
-* How to use __set_target_properties()__ to propagate configuration details across the target options.
-* How to set __target_linker_options()__ to create a map file of the executable.
-* How to use __add_custom_target()__ for executing `ielftool` and generate an `.ihex`|`.srec`|`.bin` output. 
-* __Windows-only__: How to execute the target using the [IAR C-SPY Debugger Simulator][url-iar-docs-cspybat] via CTest.
-
-The __myMath__ library target is located in the __lib__ subdirectory. The library contains functions which take two integer parameters to perform basic arithmetic over them, returning another integer as result. 
-
-The __myProgram__ executable target is located in the __app__ subdirectory. The program performs arithmetic operations using the __myMath__'s library functions.
-
-For each architecture, the project uses 3 __CMakeLists.txt__. These files have further comments. 
-
-* The __CMakeLists.txt__ in the __top-level__ directory:
-
-| [`430`][430-ex2-t] | [`8051`][8051-ex2-t] | [`arm`][arm-ex2-t] | [`avr`][avr-ex2-t] | [`riscv`][riscv-ex2-t] | [`rx`][rx-ex2-t] | [`rh850`][rh850-ex2-t] | [`rl78`][rl78-ex2-t] | [`stm8`][stm8-ex2-t] | [`v850`][v850-ex2-t] |
-| - | - | - | - | - | - | - | - | - | - |
-
-* The __lib/CMakeLists.txt__ for the __library__ target:
-
-| [`430`][430-ex2-l] | [`8051`][8051-ex2-l] | [`arm`][arm-ex2-l] | [`avr`][avr-ex2-l] | [`riscv`][riscv-ex2-l] | [`rx`][rx-ex2-l] | [`rh850`][rh850-ex2-l] | [`rl78`][rl78-ex2-l] | [`stm8`][stm8-ex2-l] | [`v850`][v850-ex2-l] |
-| - | - | - | - | - | - | - | - | - | - |
-
-* The __app/CMakeLists.txt__ for the __executable__ target:
-
-| [`430`][430-ex2-a] | [`8051`][8051-ex2-a] | [`arm`][arm-ex2-a] | [`avr`][avr-ex2-a] | [`riscv`][riscv-ex2-a] | [`rx`][rx-ex2-a] | [`rh850`][rh850-ex2-a] | [`rl78`][rl78-ex2-a] | [`stm8`][stm8-ex2-a] | [`v850`][v850-ex2-a] |
-| - | - | - | - | - | - | - | - | - | - |
-
+ 
 ## Debugging
-When executable targets are built with __debug information__, they can be debugged with the __IAR C-SPY Debugger__, directly from the __IAR Embedded Workbench__ IDE.
+When executable targets are built with _debug information_, they can be debugged with the __IAR C-SPY Debugger__, directly from the __IAR Embedded Workbench__ IDE.
 
 The [Debugging an Externally Built Executable file][url-iar-docs-ext-elf] Technical Note has the instructions for setting up a __debug-only__ project.
+   
+## Issues
+Found an issue or have a suggestion related to the [__cmake-tutorial__][url-repo-home] tutorial? Feel free to use the public issue tracker.
+- Do not forget to take a look at [earlier issues][url-repo-issue-old].
+- If creating a [new][url-repo-issue-new] issue, please describe it in detail.   
 
 ## Conclusion
 This tutorial provided information on how to start building embedded software projects and, also, on how to perform automated tests when using the IAR Systems' tools with CMake. Once the core ideas presented here are mastered, the possibilities are only limited by the developer's mind. Such a setup might be useful depending on each organization's needs and can be used as a starting point for particular customizations.
@@ -264,12 +247,10 @@ This tutorial provided information on how to start building embedded software pr
 [url-repo-home]:         https://github.com/IARSystems/cmake-tutorial
 [url-repo-issue-new]:    https://github.com/IARSystems/cmake-tutorial/issues/new
 [url-repo-issue-old]:    https://github.com/IARSystems/cmake-tutorial/issues?q=is%3Aissue+is%3Aopen%7Cclosed
-[url-repo-example1]:     https://github.com/IARSystems/cmake-tutorial/releases/download/1.0.0/iar-cmake-tutorial-example1-mix-c-asm.zip
-[url-repo-example2]:     https://github.com/IARSystems/cmake-tutorial/releases/download/1.0.0/iar-cmake-tutorial-example2-using-libs.zip
    
 [url-iar-docs-tn190701]: https://www.iar.com/knowledge/support/technical-notes/general/using-cmake-with-iar-embedded-workbench/
-[url-iar-docs-macros]:   https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=421
-[url-iar-docs-cspybat]:  https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=505
+[url-iar-docs-macros]:   https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=417
+[url-iar-docs-cspybat]:  https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=503
 [url-iar-docs-ext-elf]:  https://www.iar.com/knowledge/support/technical-notes/debugger/debugging-an-externally-built-executable-file/
 
 [url-gh-docs-notify]:    https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications
@@ -280,56 +261,3 @@ This tutorial provided information on how to start building embedded software pr
 [url-cm-docs-ctest]:     https://cmake.org/cmake/help/latest/manual/ctest.1.html
 [url-cm-wiki]:           https://gitlab.kitware.com/cmake/community/-/wikis/home
 [url-cm-kitware]:        https://kitware.com
-
-  
-<!-- EXAMPLE 1 -->
-[430-ex1]:               examples/mix-c-asm/430/CMakeLists.txt
-[8051-ex1]:              examples/mix-c-asm/8051/CMakeLists.txt
-[arm-ex1]:               examples/mix-c-asm/arm/CMakeLists.txt
-[avr-ex1]:               examples/mix-c-asm/avr/CMakeLists.txt
-[riscv-ex1]:             examples/mix-c-asm/riscv/CMakeLists.txt
-[rx-ex1]:                examples/mix-c-asm/rx/CMakeLists.txt
-[rl78-ex1]:              examples/mix-c-asm/rl78/CMakeLists.txt
-[rh850-ex1]:             examples/mix-c-asm/rh850/CMakeLists.txt
-[stm8-ex1]:              examples/mix-c-asm/stm8/CMakeLists.txt
-[v850-ex1]:              examples/mix-c-asm/v850/CMakeLists.txt
-  
-  
- <!-- EXAMPLE 2 - Top -->
-[430-ex2-t]:             examples/using-libs/430/CMakeLists.txt
-[8051-ex2-t]:            examples/using-libs/8051/CMakeLists.txt
-[arm-ex2-t]:             examples/using-libs/arm/CMakeLists.txt
-[avr-ex2-t]:             examples/using-libs/avr/CMakeLists.txt
-[riscv-ex2-t]:           examples/using-libs/riscv/CMakeLists.txt
-[rx-ex2-t]:              examples/using-libs/rx/CMakeLists.txt
-[rl78-ex2-t]:            examples/using-libs/rl78/CMakeLists.txt
-[rh850-ex2-t]:           examples/using-libs/rh850/CMakeLists.txt
-[stm8-ex2-t]:            examples/using-libs/stm8/CMakeLists.txt
-[v850-ex2-t]:            examples/using-libs/v850/CMakeLists.txt
- 
-
- <!-- EXAMPLE 2 - library -->
-[430-ex2-l]:             examples/using-libs/430/lib/CMakeLists.txt
-[8051-ex2-l]:            examples/using-libs/8051/lib/CMakeLists.txt
-[arm-ex2-l]:             examples/using-libs/arm/lib/CMakeLists.txt
-[avr-ex2-l]:             examples/using-libs/avr/lib/CMakeLists.txt
-[riscv-ex2-l]:           examples/using-libs/riscv/lib/CMakeLists.txt
-[rx-ex2-l]:              examples/using-libs/rx/lib/CMakeLists.txt
-[rl78-ex2-l]:            examples/using-libs/rl78/lib/CMakeLists.txt
-[rh850-ex2-l]:           examples/using-libs/rh850/lib/CMakeLists.txt
-[v850-ex2-l]:            examples/using-libs/v850/lib/CMakeLists.txt
-[stm8-ex2-l]:            examples/using-libs/stm8/lib/CMakeLists.txt
- 
-<!-- EXAMPLE 2 - Application -->
-[430-ex2-a]:             examples/using-libs/430/app/CMakeLists.txt
-[8051-ex2-a]:            examples/using-libs/8051/app/CMakeLists.txt
-[arm-ex2-a]:             examples/using-libs/arm/app/CMakeLists.txt
-[avr-ex2-a]:             examples/using-libs/avr/app/CMakeLists.txt
-[riscv-ex2-a]:           examples/using-libs/riscv/app/CMakeLists.txt
-[rx-ex2-a]:              examples/using-libs/rx/app/CMakeLists.txt
-[rl78-ex2-a]:            examples/using-libs/rl78/app/CMakeLists.txt
-[rh850-ex2-a]:           examples/using-libs/rh850/app/CMakeLists.txt
-[v850-ex2-a]:            examples/using-libs/v850/app/CMakeLists.txt
-[stm8-ex2-a]:            examples/using-libs/stm8/app/CMakeLists.txt
-  
-
