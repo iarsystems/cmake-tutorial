@@ -34,7 +34,7 @@ To build a project developed with the IAR Compiler using CMake we need at least
 By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to indicate the desired toolchain's location for its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ Compilers__.
 
 On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from the repository you have cloned, perform the following changes to match your system:
-* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#5) replacing `<arch>` by the corresponding compiler's target architecture: `430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
+* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L5) replacing `<arch>` by the corresponding compiler's target architecture: `430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
 
 * Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L8) to match the corresponding location where the active product was __installed__ on __your__ system, adjusting as needed.
 
