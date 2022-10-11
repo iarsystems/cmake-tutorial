@@ -33,10 +33,14 @@ To build a project developed with the IAR Compiler using CMake we need at least
 ### Configuring the toolchain file
 By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to indicate the desired toolchain's location for its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ Compilers__.
 
-On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from the repository you have cloned, perform the following changes to match your system:
-* Update [__CMAKE_SYSTEM_PROCESSOR__](examples/iar-toolchain.cmake#L5) replacing `<arch>` by the corresponding compiler's target architecture: `430`, `8051`, `arm`, `avr`, `riscv`, `rx`, `rh850`, `rl78`, `stm8` or `v850`.
+On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from the repository you have cloned, set the following variables to match the product installed in your system:
+* Set `CMAKE_SYSTEM_PROCESSOR`:
 
-* Update [__IAR_INSTALL_DIR__](examples/iar-toolchain.cmake#L8) to match the corresponding location where the active product was __installed__ on __your__ system, adjusting as needed.
+https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccdba0c0d38de/examples/iar-toolchain.cmake#L3-L5
+
+* Set `IAR_INSTALL_DIR`:
+
+https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccdba0c0d38de/examples/iar-toolchain.cmake#L7-L8
 
 <details> <summary><b>Notes on IAR_INSTALL_DIR</b> (Click to unfold)</summary>
 
@@ -52,7 +56,7 @@ On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from th
    
 </details>
    
-### Configuring a minimal project
+### A minimal project
 A project is defined by one or more CMakeLists.txt file(s). Let's understand how a project can be configured with a simple example for the Arm target architecture. 
 
 * Inside the [examples/arm](examples/arm) directory, create a new subdirectory named __hello-world__:
