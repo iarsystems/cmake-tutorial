@@ -33,7 +33,7 @@ To build a project developed with the IAR Compiler using CMake we need at least
 ### Configuring the toolchain file
 By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to indicate the desired toolchain's location for its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ Compilers__.
 
-On the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file from the repository you have cloned, set the following variables to match the product installed in your system:
+On the example toolchain file from the repository you have cloned, set the following variables to match the product installed in your system:
 * Set `CMAKE_SYSTEM_PROCESSOR`:
 
 https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccdba0c0d38de/examples/iar-toolchain.cmake#L3-L5
@@ -57,47 +57,22 @@ https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccd
 </details>
    
 ### A minimal project
-A project is defined by one or more CMakeLists.txt file(s). Let's understand how a project can be configured with a simple example for the Arm target architecture. 
+A CMake project is defined by one or more CMakeLists.txt file(s). Let's understand how a simple `hello-world` project can be configured for the Arm target architecture. 
 
-* Inside the [examples/arm](examples/arm) directory, create a new subdirectory named __hello-world__:
+* Change to the `hello-world` project:
 ```
-> cd /path/to/cmake-tutorial/examples/arm
-> mkdir hello-world
-> cd hello-world   
-```   
-* Create the __CMakeLists.txt__ file:
-```cmake
-# CMake requires to set its minimum required version
-cmake_minimum_required(VERSION 3.23)
-
-# Set the project name, enabling its required languages (e.g. ASM, C and/or CXX)   
-project(simpleProject LANGUAGES C)
-
-# Add a executable target named "hello-world"
-add_executable(hello-world
-   # Target sources
-   main.c)
-   
-# Set the target's compiler options
-target_compile_options(hello-world PRIVATE --cpu=Cortex-M4 --fpu=VFPv4_sp --dlib_config normal)   
-   
-# Set the target's linker options
-target_link_options(hello-world PRIVATE --semihosting --config ${TOOLKIT_DIR}/config/linker/ST/stm32f407xG.icf)
+cd /path/to/cmake-tutorial/examples/arm/hello-world
 ```
+
+* Verify the contents of the __CMakeLists.txt__ file:
+
+https://github.com/IARSystems/cmake-tutorial/blob/985f597765bd1186867b4157af3d1afde6531943/examples/arm/hello-world/CMakeLists.txt#L1-L16
+
 > :bulb: Adjust the target compile/link options for architectures other than __arm__. 
 
-* Finally create a simple __main.c__ source file:
-```c
-#include <intrinsics.h>
-#include <stdio.h>
-   
-void main() {
-   while (1) {
-     printf("Hello world!\n");
-     __no_operation();
-   }
-}   
-```
+* Verify the contents of the __main.c__ source file:
+
+https://github.com/IARSystems/cmake-tutorial/blob/985f597765bd1186867b4157af3d1afde6531943/examples/arm/hello-world/main.c#L1-L9
    
 ###  Configuring the build system generator
 Once we have our minimal project with a suitable toolchain file, we invoke CMake to configure our build environment for when cross-compiling, choosing which _build system generator_ and which _toolchain file_ should be used for the project.
