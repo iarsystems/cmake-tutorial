@@ -15,6 +15,8 @@
 # IAR_LMS2_SERVER_IP
 #   If defined, automatic license setup will be performed
 
+BUILD_CFGS=(Debug RelWithDebInfo Release)
+
 if [ -z $IAR_TOOL_ROOT ]; then
   IAR_TOOL_ROOT=/opt/iarsystems
 fi
@@ -66,13 +68,17 @@ function find_xlink() {
 }
 
 function cmake_configure() {
-  rm -rf _build;
+  rm -rf _builds;
   if [ "$MSYSTEM" = "MINGW64" ]; then
     CMAKE_MAKE_PRG=$(cygpath -m $(which ninja));
   else
     CMAKE_MAKE_PRG=$(which ninja);
   fi
-  cmake -B_build -G "Ninja" \
+  if [ ! $CMAKE_MAKE_PRG ]; then
+    echo "FATAL ERROR: Ninja not found.";
+    exit 1;
+  fi
+  cmake -B _builds -G "Ninja Multi-Config" \
     -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PRG;
   if [ $? -ne 0 ]; then
     echo "FAIL: CMake configuration phase.";
@@ -81,30 +87,33 @@ function cmake_configure() {
 }
 
 function cmake_build() {
-  cmake --build _build --verbose;
-  if [ $? -ne 0 ]; then
-    echo "FAIL: CMake building phase.";
-    exit 1;
-  fi
+  for cfg in ${BUILD_CFGS[@]}; do
+    cmake --build _builds --config ${cfg} --verbose;
+    if [ $? -ne 0 ]; then
+      echo "FAIL: CMake building phase.";
+      exit 1;
+    fi
+  done
 }
 
 function check_elf() {
-  has_size;
-  if [ -f _build/test-c.elf ]; then
-    echo " C  ELF built successfully.";
-  else
-    echo " C  ELF not built.";
-  fi
-  if [ -f _build/test-cxx.elf ]; then
-    echo "CXX ELF built successfully.";
-  else
-    echo "CXX ELF not built.";
-  fi
-  if [ -f _build/test-asm.elf ]; then
-    echo "ASM ELF built successfully.";
-  else
-    echo "ASM ELF not built.";
-  fi
+  for elf in ${BUILD_CFGS[@]}; do
+    if [ -f _builds/${cfg}/test-c.elf ]; then
+      echo "${elf}: C  ELF built successfully.";
+    else
+      echo "${elf}: C  ELF not built.";
+    fi
+    if [ -f _builds/${cfg}/test-cxx.elf ]; then
+      echo "${elf}:CXX ELF built successfully.";
+    else
+      echo "${elf}:CXX ELF not built.";
+    fi
+    if [ -f _builds/${cfg}/test-asm.elf ]; then
+      echo "${elf}:ASM ELF built successfully.";
+    else
+      echo "${elf}:ASM ELF not built.";
+    fi
+  done
 }
 
 echo "----------- ilink tools";
