@@ -43,8 +43,8 @@ function find_icc() {
     export CC="${p}";
     export CXX="${p}";
   fi
-  echo "Using   C_COMPILER: $CC";
-  echo "Using CXX_COMPILER: $CXX";
+  echo "Using  CC: $CC";
+  echo "Using CXX: $CXX";
 }
 
 function find_ilink() {
@@ -53,7 +53,7 @@ function find_ilink() {
   else
     export ASM=$(dirname ${p})/iasm${a};
   fi
-  echo "Using ASM_COMPILER: $ASM";
+  echo "Using ASM: $ASM";
 }
 
 function find_xlink() {
@@ -88,6 +88,25 @@ function cmake_build() {
   fi
 }
 
+function check_elf() {
+  has_size;
+  if [ -f _build/test-c.elf ]; then
+    echo " C  ELF built successfully.";
+  else
+    echo " C  ELF not built.";
+  fi
+  if [ -f _build/test-cxx.elf ]; then
+    echo "CXX ELF built successfully.";
+  else
+    echo "CXX ELF not built.";
+  fi
+  if [ -f _build/test-asm.elf ]; then
+    echo "ASM ELF built successfully.";
+  else
+    echo "ASM ELF not built.";
+  fi
+}
+
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
 for a in ${ILINK_TOOL[@]}; do
@@ -97,6 +116,7 @@ for a in ${ILINK_TOOL[@]}; do
     lms2-setup;
     cmake_configure;
     cmake_build;
+    check_elf;
   done
 done
 
@@ -109,5 +129,6 @@ for a in ${XLINK_TOOL[@]}; do
     lms2-setup;
     cmake_configure;
     cmake_build;
+    check_elf;
   done
 done
