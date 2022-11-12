@@ -15,7 +15,7 @@
 # IAR_LMS2_SERVER_IP
 #   If defined, automatic license setup will be performed
 
-BUILD_CFGS=(Debug RelWithDebInfo Release)
+BUILD_CFGS=(Debug RelWithDebInfo Release MinSizeRel)
 
 if [ -z $IAR_TOOL_ROOT ]; then
   IAR_TOOL_ROOT=/opt/iarsystems
