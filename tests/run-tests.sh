@@ -7,22 +7,21 @@
 # See LICENSE for detailed license information
 #
 
-# Update to where all your toolchains are installed
-TOOL_ROOT=/c/IAR_Systems/EW
+# Environment variables that can be set for this script
+# IAR_TOOL_ROOT
+#   Top-level location in which the IAR toolchains are installed
+#   MINGW64: with the full path (e.g.,) `/c/IAR_Systems/`
+#   Default: /opt/iarsystems
+# IAR_LMS2_SERVER_IP
+#   If defined, automatic license setup will be performed
 
-# LMS2 server IP (set to perform)
-LMS2_SERVER=
-
-# Check MINGW64
-if [ ! "$MSYSTEM" = "MINGW64" ]; then
-    echo "This script was designed for MSYS2 (MINGW64)."
-    echo "From e.g., https://gitforwindows.org"
-    exit 1
+if [ -z $IAR_TOOL_ROOT ]; then
+  IAR_TOOL_ROOT=/opt/iarsystems
 fi
 
 function lms2-setup() {
-  if [ ! -z $LMS2_SERVER ]; then 
-    LLM=$(dirname ${p})/../../common/bin/LightLicenseManager; \
+  if [ ! -z $IAR_LMS2_SERVER_IP ]; then
+    LLM=$(dirname ${p})/../../common/bin/LightLicenseManager;
     if [ -f $LLM ]; then
       HAS_SETUP=$(${LLM} | grep setup);
       if [ ! -z $HAS_SETUP ]; then
@@ -30,37 +29,85 @@ function lms2-setup() {
       else
         SETUP_CMD="";
       fi
-      $LLM $SETUP_CMD -s $LMS2_SERVER; \
+      $LLM $SETUP_CMD -s $IAR_LMS2_SERVER_IP;
     fi
   fi
 }
 
-echo "----------- ilink tools"
-ILINK_TOOL=(arm riscv rh850 rl78 rx stm8)
-for a in ${ILINK_TOOL[@]}; do \
-  for p in $(find $TOOL_ROOT -type f -executable -name icc${a}.exe); do \
-    export C_COMPILER=$(cygpath -m "${p}"); \
-    echo "Found   C_COMPILER: $C_COMPILER"; \
-    export ASM_COMPILER=$(cygpath -m $(dirname ${p})/iasm${a}.exe); \
-    echo "Found ASM_COMPILER: ${ASM_COMPILER}"; \
-    lms2-setup; \
-    rm -rf _build; \
-    cmake --toolchain iar-toolchain.cmake -B_build -G "Ninja" \
-      -DCMAKE_MAKE_PROGRAM=$(cygpath -m $(which ninja));
+
+function find_icc() {
+  if [ "$MSYSTEM" = "MINGW64" ]; then
+    export CC=$(cygpath -m "${p}");
+    export CXX=$CC;
+  else
+    export CC="${p}";
+    export CXX="${p}";
+  fi
+  echo "Using   C_COMPILER: $CC";
+  echo "Using CXX_COMPILER: $CXX";
+}
+
+function find_ilink() {
+  if [ "$MSYSTEM" = "MINGW64" ]; then
+    export ASM=$(cygpath -m $(dirname ${p})/iasm${a});
+  else
+    export ASM=$(dirname ${p})/iasm${a};
+  fi
+  echo "Using ASM_COMPILER: $ASM";
+}
+
+function find_xlink() {
+  if [ "$MSYSTEM" = "MINGW64" ]; then
+    export ASM=$(cygpath -m $(dirname ${p})/a${a});
+  else
+    export ASM=$(dirname ${p})/a${a};
+  fi
+  echo "Using ASM_COMPILER: $ASM";
+}
+
+function cmake_configure() {
+  rm -rf _build;
+  if [ "$MSYSTEM" = "MINGW64" ]; then
+    CMAKE_MAKE_PRG=$(cygpath -m $(which ninja));
+  else
+    CMAKE_MAKE_PRG=$(which ninja);
+  fi
+  cmake -B_build -G "Ninja" \
+    -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PRG;
+  if [ $? -ne 0 ]; then
+    echo "FAIL: CMake configuration phase.";
+    exit 1;
+  fi
+}
+
+function cmake_build() {
+  cmake --build _build --verbose;
+  if [ $? -ne 0 ]; then
+    echo "FAIL: CMake building phase.";
+    exit 1;
+  fi
+}
+
+echo "----------- ilink tools";
+ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
+for a in ${ILINK_TOOL[@]}; do
+  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}); do
+    find_icc;
+    find_ilink;
+    lms2-setup;
+    cmake_configure;
+    cmake_build;
   done
 done
 
-echo "----------- xlink tools"
-XLINK_TOOL=(8051 430 avr)
-for a in ${XLINK_TOOL[@]}; do \
-  for p in $(find $TOOL_ROOT -type f -executable -name icc${a}.exe); do \
-    export C_COMPILER=$(cygpath -m "${p}"); \
-    echo "Found   C_COMPILER: $C_COMPILER"; \
-    export ASM_COMPILER=$(cygpath -m $(dirname ${p})/a${a}.exe); \
-    echo "Found ASM_COMPILER: ${ASM_COMPILER}"; \
-    lms2-setup; \
-    rm -rf _build; \
-    cmake --toolchain iar-toolchain.cmake -B_build -G "Ninja" \
-      -DCMAKE_MAKE_PROGRAM=$(cygpath -m $(which ninja));
+echo "----------- xlink tools";
+XLINK_TOOL=(8051 430 avr);
+for a in ${XLINK_TOOL[@]}; do
+  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}); do
+    find_icc;
+    find_xlink;
+    lms2-setup;
+    cmake_configure;
+    cmake_build;
   done
 done
