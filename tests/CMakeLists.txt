@@ -6,7 +6,7 @@ list(APPEND CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo MinSizeRel)
 project(IAR-test LANGUAGES C CXX ASM)
 
 # arch-specific linker options
-if ( $ENV{SYSTEM_PROCESSOR} STREQUAL "riscv" )
+if(TARGET_ARCH STREQUAL riscv)
   set(LINKER_OPTS "SHELL:--config_def STACK_SIZE=0x1000 --config_def HEAP_SIZE=0x1000")
 endif()
 
