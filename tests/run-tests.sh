@@ -41,6 +41,7 @@ function find_icc() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
     export CC=$(cygpath -m "${p}");
     export CXX=$CC;
+    EXT=".exe";
   else
     export CC="${p}";
     export CXX="${p}";
@@ -51,7 +52,7 @@ function find_icc() {
 
 function find_ilink() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
-    export ASM=$(cygpath -m $(dirname ${p})/iasm${a});
+    export ASM=$(cygpath -m $(dirname ${p})/iasm${a}${EXT});
   else
     export ASM=$(dirname ${p})/iasm${a};
   fi
@@ -60,7 +61,7 @@ function find_ilink() {
 
 function find_xlink() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
-    export ASM=$(cygpath -m $(dirname ${p})/a${a});
+    export ASM=$(cygpath -m $(dirname ${p})/a${a}${EXT});
   else
     export ASM=$(dirname ${p})/a${a};
   fi
@@ -120,7 +121,7 @@ function cmake_build() {
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
 for a in ${ILINK_TOOL[@]}; do
-  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}); do
+  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
     find_icc;
     find_ilink;
     lms2-setup;
@@ -132,7 +133,7 @@ done
 echo "----------- xlink tools";
 XLINK_TOOL=(8051 430 avr);
 for a in ${XLINK_TOOL[@]}; do
-  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}); do
+  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
     find_icc;
     find_xlink;
     lms2-setup;
