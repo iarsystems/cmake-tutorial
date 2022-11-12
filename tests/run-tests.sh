@@ -21,6 +21,10 @@ if [ -z $IAR_TOOL_ROOT ]; then
   IAR_TOOL_ROOT=/opt/iarsystems
 fi
 
+if [ "$MSYSTEM" = "MINGW64" ]; then
+  EXT=.exe;
+fi
+
 function lms2-setup() {
   if [ ! -z $IAR_LMS2_SERVER_IP ]; then
     LLM=$(dirname ${p})/../../common/bin/LightLicenseManager;
@@ -41,7 +45,6 @@ function find_icc() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
     export CC=$(cygpath -m "${p}");
     export CXX=$CC;
-    EXT=".exe";
   else
     export CC="${p}";
     export CXX="${p}";
