@@ -86,35 +86,36 @@ function cmake_configure() {
   fi
 }
 
+function check_elf() {
+    if [ -f _builds/${cfg}/test-c.elf ]; then
+      echo "+${cfg}:C   ELF built successfully.";
+    else
+      echo "-${cfg}:C   ELF not built.";
+    fi
+    if [ -f _builds/${cfg}/test-cxx.elf ]; then
+      echo "+${cfg}:CXX ELF built successfully.";
+    else
+      echo "-${cfg}:CXX ELF not built.";
+    fi
+    if [ -f _builds/${cfg}/test-asm.elf ]; then
+      echo "+${cfg}:ASM ELF built successfully.";
+    else
+      echo "-${cfg}:ASM ELF not built.";
+    fi
+}
+
 function cmake_build() {
   for cfg in ${BUILD_CFGS[@]}; do
+    echo "===== Build configuration: [${cfg}]";
     cmake --build _builds --config ${cfg} --verbose;
     if [ $? -ne 0 ]; then
-      echo "FAIL: CMake building phase.";
+      echo "FAIL: CMake building phase (${cfg}).";
       exit 1;
     fi
+    check_elf;
   done
 }
 
-function check_elf() {
-  for elf in ${BUILD_CFGS[@]}; do
-    if [ -f _builds/${cfg}/test-c.elf ]; then
-      echo "${elf}: C  ELF built successfully.";
-    else
-      echo "${elf}: C  ELF not built.";
-    fi
-    if [ -f _builds/${cfg}/test-cxx.elf ]; then
-      echo "${elf}:CXX ELF built successfully.";
-    else
-      echo "${elf}:CXX ELF not built.";
-    fi
-    if [ -f _builds/${cfg}/test-asm.elf ]; then
-      echo "${elf}:ASM ELF built successfully.";
-    else
-      echo "${elf}:ASM ELF not built.";
-    fi
-  done
-}
 
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
@@ -125,7 +126,6 @@ for a in ${ILINK_TOOL[@]}; do
     lms2-setup;
     cmake_configure;
     cmake_build;
-    check_elf;
   done
 done
 
@@ -138,6 +138,5 @@ for a in ${XLINK_TOOL[@]}; do
     lms2-setup;
     cmake_configure;
     cmake_build;
-    check_elf;
   done
 done
