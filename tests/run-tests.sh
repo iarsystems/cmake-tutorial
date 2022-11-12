@@ -125,6 +125,7 @@ echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
 for a in ${ILINK_TOOL[@]}; do
   for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
+    export SYSTEM_PROCESSOR=${a};
     find_icc;
     find_ilink;
     lms2-setup;
