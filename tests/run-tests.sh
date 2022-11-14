@@ -93,21 +93,21 @@ function cmake_configure() {
   fi
 }
 
-function check_elf() {
-    if [ -f _builds/${cfg}/test-c.elf ]; then
-      echo "+${cfg}:C   ELF built successfully.";
+function check_output() {
+    if [ -f _builds/${cfg}/test-c.${OUTPUT_FORMAT,,} ]; then
+      echo "+${cfg}:C   ${OUTPUT_FORMAT} built successfully.";
     else
-      echo "-${cfg}:C   ELF not built.";
+      echo "-${cfg}:C   ${OUTPUT_FORMAT} not built.";
     fi
-    if [ -f _builds/${cfg}/test-cxx.elf ]; then
-      echo "+${cfg}:CXX ELF built successfully.";
+    if [ -f _builds/${cfg}/test-cxx.${OUTPUT_FORMAT,,} ]; then
+      echo "+${cfg}:CXX ${OUTPUT_FORMAT} built successfully.";
     else
-      echo "-${cfg}:CXX ELF not built.";
+      echo "-${cfg}:CXX ${OUTPUT_FORMAT} not built.";
     fi
-    if [ -f _builds/${cfg}/test-asm.elf ]; then
-      echo "+${cfg}:ASM ELF built successfully.";
+    if [ -f _builds/${cfg}/test-asm.${OUTPUT_FORMAT,,} ]; then
+      echo "+${cfg}:ASM ${OUTPUT_FORMAT} built successfully.";
     else
-      echo "-${cfg}:ASM ELF not built.";
+      echo "-${cfg}:ASM ${OUTPUT_FORMAT} not built.";
     fi
 }
 
@@ -119,13 +119,14 @@ function cmake_build() {
       echo "FAIL: CMake building phase (${cfg}).";
       exit 1;
     fi
-    check_elf;
+    check_output;
   done
 }
 
 
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
+OUTPUT_FORMAT=ELF;
 for a in ${ILINK_TOOL[@]}; do
   for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
     find_icc;
@@ -138,6 +139,7 @@ done
 
 echo "----------- xlink tools";
 XLINK_TOOL=(8051 430 avr);
+OUTPUT_FORMAT=BIN;
 for a in ${XLINK_TOOL[@]}; do
   for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
     find_icc;
