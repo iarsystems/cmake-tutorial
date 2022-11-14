@@ -1,5 +1,7 @@
 #include "module.h"
-int main() {
-  return INTERNAL;
+__root int i;
+__root int main() {
+  i = INTERNAL;
+  return i;
 }
 
