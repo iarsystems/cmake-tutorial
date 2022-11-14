@@ -27,7 +27,7 @@ fi
 
 function lms2-setup() {
   if [ ! -z $IAR_LMS2_SERVER_IP ]; then
-    LLM=$(dirname ${p})/../../common/bin/LightLicenseManager;
+    LLM=$(dirname -z ${p})/../../common/bin/LightLicenseManager;
     if [ -f $LLM ]; then
       HAS_SETUP=$(${LLM} | grep setup);
       if [ ! -z $HAS_SETUP ]; then
@@ -49,24 +49,25 @@ function find_icc() {
     export CC="${p}";
     export CXX="${p}";
   fi
+  export TOOLKIT_DIR=$(dirname -z $CC)/..
   echo "Using  CC: $CC";
   echo "Using CXX: $CXX";
 }
 
 function find_ilink() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
-    export ASM=$(cygpath -m $(dirname ${p})/iasm${a}${EXT});
+    export ASM=$(cygpath -m $(dirname -z ${p})/iasm${a}${EXT});
   else
-    export ASM=$(dirname ${p})/iasm${a};
+    export ASM=$(dirname -z ${p})/iasm${a};
   fi
   echo "Using ASM: $ASM";
 }
 
 function find_xlink() {
   if [ "$MSYSTEM" = "MINGW64" ]; then
-    export ASM=$(cygpath -m $(dirname ${p})/a${a}${EXT});
+    export ASM=$(cygpath -m $(dirname -z ${p})/a${a}${EXT});
   else
-    export ASM=$(dirname ${p})/a${a};
+    export ASM=$(dirname -z ${p})/a${a};
   fi
   echo "Using ASM_COMPILER: $ASM";
 }
@@ -84,7 +85,8 @@ function cmake_configure() {
   fi
   cmake -B _builds -G "Ninja Multi-Config" \
     -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PRG \
-    -DTARGET_ARCH=${a};
+    -DTARGET_ARCH=${a} \
+    -DTOOLKIT_DIR=${TOOLKIT_DIR};
   if [ $? -ne 0 ]; then
     echo "FAIL: CMake configuration phase.";
     exit 1;
