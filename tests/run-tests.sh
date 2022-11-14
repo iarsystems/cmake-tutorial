@@ -86,8 +86,7 @@ function cmake_configure() {
   cmake -B _builds -G "Ninja Multi-Config" \
     -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PRG \
     -DTARGET_ARCH=${a} \
-    -DTOOLKIT_DIR=${TOOLKIT_DIR} \
-    -Wno-dev;
+    -DTOOLKIT_DIR=${TOOLKIT_DIR};
   if [ $? -ne 0 ]; then
     echo "FAIL: CMake configuration phase.";
     exit 1;
