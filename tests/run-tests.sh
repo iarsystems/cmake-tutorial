@@ -49,7 +49,7 @@ function find_icc() {
     export CC="${p}";
     export CXX="${p}";
   fi
-  export TOOLKIT_DIR=$(dirname $CC)/..
+  export TOOLKIT_DIR=$(dirname $(dirname $CC))
   echo "Using  CC: $CC";
   echo "Using CXX: $CXX";
 }
