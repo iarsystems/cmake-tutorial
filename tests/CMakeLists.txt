@@ -8,7 +8,7 @@ project(IAR-test LANGUAGES C CXX ASM)
 # arch-specific linker options
 if(TARGET_ARCH STREQUAL arm)
   set(LINKER_OPTS "SHELL:--config ${TOOLKIT_DIR}/config/generic.icf")
-elseif(TARGET_ARCH MATCHES "(riscv|rx|stm8)")
+elseif(TARGET_ARCH MATCHES "(riscv|rx)")
   set(LINKER_OPTS "SHELL:--config_def CSTACK_SIZE=0x1000 --config_def HEAP_SIZE=0x1000 --debug_lib")
 elseif(TARGET_ARCH STREQUAL rh850)
   set(LINKER_OPTS "SHELL:--config_def CSTACK_SIZE=0x1000 --config_def HEAP_SIZE=0x1000 --config_def _SELF_SIZE=0x20000
@@ -19,6 +19,8 @@ elseif(TARGET_ARCH STREQUAL rl78)
   _NEAR_CONST_LOCATION_SIZE=0x6F00 --define_symbol _NEAR_CONST_LOCATION=0 --debug_lib --config ${TOOLKIT_DIR}/config/lnkrl78_s3.icf")
 elseif(TARGET_ARCH STREQUAL rx)
   set(LINKER_OPTS "SHELL:--config_def _USTACK_SIZE=0x1000 --config_def _ISTACK_SIZE=0x1000 _HEAP_SIZE=0x1000 --debug_lib")
+elseif(TARGET_ARCH STREQUAL stm8)
+  set(LINKER_OPTS "SHELL:--config_def _CSTACK_SIZE=0x100 --config_def _HEAP_SIZE=0x100")
 endif()
 
 # Test the IAR C Compiler
