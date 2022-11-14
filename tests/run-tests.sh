@@ -17,7 +17,7 @@
 
 BUILD_CFGS=(Debug RelWithDebInfo Release MinSizeRel)
 
-if [ -z $IAR_TOOL_ROOT ]; then
+if ! ((${#IAR_TOOL_ROOT[@]})); then
   IAR_TOOL_ROOT=/opt/iarsystems
 fi
 
@@ -127,25 +127,33 @@ function cmake_build() {
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
 OUTPUT_FORMAT=ELF;
-for a in ${ILINK_TOOL[@]}; do
-  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
-    find_icc;
-    find_ilink;
-    lms2-setup;
-    cmake_configure;
-    cmake_build;
+for r in ${IAR_TOOL_ROOT[@]}; do
+  for a in ${ILINK_TOOL[@]}; do
+    for b in $(find ${r} -path "*/${a}/bin"); do
+      for p in $(find ${b} -executable -name icc${a}${EXT}); do
+        find_icc;
+        find_ilink;
+        lms2-setup;
+        cmake_configure;
+        cmake_build;
+      done
+    done
   done
 done
 
 echo "----------- xlink tools";
 XLINK_TOOL=(8051 430 avr);
 OUTPUT_FORMAT=BIN;
-for a in ${XLINK_TOOL[@]}; do
-  for p in $(find $IAR_TOOL_ROOT -type f -executable -name icc${a}${EXT}); do
-    find_icc;
-    find_xlink;
-    lms2-setup;
-    cmake_configure;
-    cmake_build;
+for r in ${IAR_TOOL_ROOT[@]}; do
+  for a in ${XLINK_TOOL[@]}; do
+    for b in $(find ${r} -path "*/${a}/bin"); do
+      for p in $(find ${b} -executable -name icc${a}${EXT}); do
+        find_icc;
+        find_xlink;
+        lms2-setup;
+        cmake_configure;
+        cmake_build;
+      done
+    done
   done
 done
