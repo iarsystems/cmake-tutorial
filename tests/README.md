@@ -1,5 +1,5 @@
 # Tests for the IAR toolchains on CMake
-The tests in this directory are for testing the CMake modules (`/path/to/share/cmake-x.xx/Modules/Compiler/IAR-*.cmake`) for the IAR toolchains. 
+The tests in this directory are for testing the CMake modules (e.g., `/path/to/share/cmake-x.xx/Modules/Compiler/IAR-*.cmake`) for the IAR toolchains. 
 
 The `run-tests.sh` script will...
 - build one executable for each supported language (`C`, `CXX` and `ASM`) using...
