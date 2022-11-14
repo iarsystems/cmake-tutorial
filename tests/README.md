@@ -1,5 +1,7 @@
 # Tests for the IAR toolchains on CMake
-The tests in this directory will exercise the CMake modules for IAR toolchains using the the default CMake build configurations (`Debug`, `Release`, `DebWithRelInfo` and `MinSizeRel`). For each build configuration, one simple executable will be built for each supported language (`C`, `CXX` and `ASM`).
+The tests in this directory will exercise the CMake modules for one (or more) IAR toolchain(s). The script will...
+- build one executable for each supported language (`C`, `CXX` and `ASM`) using...
+- the the default CMake build configurations (`Debug`, `Release`, `DebWithRelInfo` and `MinSizeRel`).
 
 ## Environment
 The following GNU Bash environments were used:
