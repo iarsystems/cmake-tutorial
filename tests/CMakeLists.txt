@@ -20,7 +20,8 @@ elseif(TARGET_ARCH STREQUAL rl78)
 elseif(TARGET_ARCH STREQUAL rx)
   set(LINKER_OPTS "SHELL:--config_def _USTACK_SIZE=0x1000 --config_def _ISTACK_SIZE=0x1000 _HEAP_SIZE=0x1000 --debug_lib")
 elseif(TARGET_ARCH STREQUAL stm8)
-  set(LINKER_OPTS "SHELL:--config_def _CSTACK_SIZE=0x100 --config_def _HEAP_SIZE=0x100")
+  set(LINKER_OPTS "SHELL:--config_def _CSTACK_SIZE=0x100 --config_def _HEAP_SIZE=0x100 --config
+  ${TOOLKIT_DIR}/config/lnkstm8.icf")
 endif()
 
 # Test the IAR C Compiler
