@@ -8,7 +8,7 @@ project(IAR-test LANGUAGES C CXX ASM)
 # arch-specific linker options
 if(TARGET_ARCH STREQUAL arm)
   set(LINKER_OPTS "SHELL:--config ${TOOLKIT_DIR}/config/generic.icf")
-elseif(TARGET_ARCH MATCHES "(riscv|rx)")
+elseif(TARGET_ARCH MATCHES "(riscv|rx|stm8)")
   set(LINKER_OPTS "SHELL:--config_def CSTACK_SIZE=0x1000 --config_def HEAP_SIZE=0x1000 --debug_lib")
 elseif(TARGET_ARCH STREQUAL rh850)
   set(LINKER_OPTS "SHELL:--config_def CSTACK_SIZE=0x1000 --config_def HEAP_SIZE=0x1000 --config_def _SELF_SIZE=0x20000
