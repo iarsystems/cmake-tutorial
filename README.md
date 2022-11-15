@@ -33,28 +33,15 @@ To build a project developed with the IAR Compiler using CMake we need at least
 ### Configuring the toolchain file
 By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to indicate the desired toolchain's location for its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ Compilers__.
 
-On the example toolchain file from the repository you have cloned, set the following variables to match the product installed in your system:
-* Set `CMAKE_SYSTEM_PROCESSOR`:
-
-https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccdba0c0d38de/examples/iar-toolchain.cmake#L3-L5
-
-* Set `IAR_INSTALL_DIR`:
-
-https://github.com/IARSystems/cmake-tutorial/blob/2c476dc240bf2c0c86bf144863eccdba0c0d38de/examples/iar-toolchain.cmake#L7-L8
-
-<details> <summary><b>Notes on IAR_INSTALL_DIR</b> (Click to unfold)</summary>
-
->Below you will find some general examples for Windows and Linux:
-> 
->| IAR_INSTALL_DIR example for     | Windows tools                                               | Linux tools                         |
->| ------------------------------- | ----------------------------------------------------------- | ----------------------------------- |
->| a typical installation location | `"C:/Program Files/IAR Systems/Embedded Workbench N.n"`     | `"/opt/iarsystems/bx<arch>-N.nn.n"` |
->| a custom installation location  | `"C:/IAR_Systems/EWARM/N.nn.n"`                             | Not applicable                      | 
-> * Replace `N.nn[.n]` or `<arch>` by the actual version or package of the active product.
-> * The __IAR_INSTALL_DIR__ is used to set the [__TOOLKIT_DIR__](https://github.com/IARSystems/cmake-tutorial/blob/v2022.06/examples/iar-toolchain.cmake#L17) variable.
-> * The __TOOLKIT_DIR__ variable is used to set the [PATH](https://github.com/IARSystems/cmake-tutorial/blob/v2022.06/examples/iar-toolchain.cmake#L20-L24) environment variable with the `bin` directory so that the compiler can be found on the search path. Setting the PATH with this method lasts for the time CMake is running.
-   
-</details>
+In the [examples/iar-toolchain.cmake](examples/iar-toolchain.cmake) file:
+* Set `TOOLKIT` variable to the compiler's target architecture.
+```cmake
+# Action: Set the `TOOLKIT` variable
+# Examples: arm, riscv, rh850, rl78, rx, stm8, 430, 8051, avr or v850
+# Alternative: override the default TOOLKIT_DIR (/path/to/installation/<arch>)
+set(TOOLKIT arm)
+```
+>:bulb: The default toolchain file will search for an available compiler in the default installation paths. Alternatively, the `TOOLKIT` variable can be used to set a specific installation directory (e.g., `C:/IAR_Systems/EWARM/N.nn`).
    
 ### A minimal project
 A CMake project is defined by one or more CMakeLists.txt file(s). Let's understand how a simple `hello-world` project can be configured for the Arm target architecture. 
