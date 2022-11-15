@@ -1,41 +1,48 @@
 # Toolchain File for the IAR C/C++ Compiler
 
-# Action: Set the `<arch>` to the compiler's target architecture
-# Examples: 430, 8051, arm, avr, riscv, rx, rl78, rh850, stm8 or v850
-set(CMAKE_SYSTEM_PROCESSOR <arch>)
+# Action: Set the `TOOLKIT` variable
+# Examples: arm, riscv, rh850, rl78, rx, stm8, 430, 8051, avr or v850
+# Alternative: override the default TOOLKIT_DIR (/path/to/installation/<arch>)
+set(TOOLKIT arm)
 
-# Action: Set the `IAR_INSTALL_DIR` to the tool installation path
-set(IAR_INSTALL_DIR "/path/to/install_dir")
+# Get the toolchain target from the TOOLKIT
+get_filename_component(CMAKE_SYSTEM_PROCESSOR ${TOOLKIT} NAME)
 
-# "Generic" is used when cross compiling
-set(CMAKE_SYSTEM_NAME Generic)
+# IAR C Compiler
+find_program(CMAKE_C_COMPILER
+  NAMES icc${CMAKE_SYSTEM_PROCESSOR}
+  PATHS ${TOOLKIT}
+        "$ENV{ProgramFiles}/IAR Systems/*"
+        "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
+  PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
+  REQUIRED )
+
+# IAR C++ Compiler
+find_program(CMAKE_CXX_COMPILER
+  NAMES icc${CMAKE_SYSTEM_PROCESSOR}
+  PATHS ${TOOLKIT}
+        "$ENV{PROGRAMFILES}/IAR Systems/*"
+        "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
+  PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
+  REQUIRED )
+
+# IAR Assembler
+find_program(CMAKE_ASM_COMPILER
+  NAMES iasm${CMAKE_SYSTEM_PROCESSOR} a${CMAKE_SYSTEM_PROCESSOR}
+  PATHS ${TOOLKIT}
+        "$ENV{PROGRAMFILES}/IAR Systems/*"
+        "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
+  PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
+  REQUIRED )
 
 # Avoids running the linker during try_compile()
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-# Set a generic `TOOLKIT_DIR` location for the supported architectures
-set(TOOLKIT_DIR "${IAR_INSTALL_DIR}/${CMAKE_SYSTEM_PROCESSOR}")
+# Set the TOOLKIT_DIR variable for the CMakeLists
+get_filename_component(BIN_DIR ${CMAKE_C_COMPILER} DIRECTORY)
+get_filename_component(TOOLKIT_DIR ${BIN_DIR} PATH)
+unset(BIN_DIR)
 
-# Add the selected IAR toolchain to the PATH (only while CMake is running)
-if (UNIX)
-  set(ENV{PATH} "${TOOLKIT_DIR}/bin:$ENV{PATH}")
-else()
-  set(ENV{PATH} "${TOOLKIT_DIR}/bin;$ENV{PATH}")
-endif()
-
-# CMake requires individual variables for the C, C++ and Assembler
-# IAR C/C++ Compiler executable name
-set(CMAKE_C_COMPILER    "icc${CMAKE_SYSTEM_PROCESSOR}")
-set(CMAKE_CXX_COMPILER  "icc${CMAKE_SYSTEM_PROCESSOR}")
- 
-# Automatically set the IAR Assembler executable name 
-# (depends on the toolchain's linker technology)
-list(APPEND _IAR_TOOLCHAINS_ILINK arm riscv rh850 rl78 rx stm8)
-if (${CMAKE_SYSTEM_PROCESSOR} IN_LIST _IAR_TOOLCHAINS_ILINK)
-  # The Assembler executable for toolchains using the ILINK linker
-  set(CMAKE_ASM_COMPILER  "iasm${CMAKE_SYSTEM_PROCESSOR}")
-else()
-  # The Assembler executable for toolchains using the XLINK linker
-  set(CMAKE_ASM_COMPILER  "a${CMAKE_SYSTEM_PROCESSOR}")
-endif()
-unset(_IAR_TOOLCHAINS_ILINK)
