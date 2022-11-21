@@ -13,7 +13,7 @@ The following GNU Bash environments were used:
 
 ## Environment variables
 ### IAR_TOOL_ROOT
-Export the `$IAR_TOOL_ROOT` environment variable, pointing to the top-level location in which all the IAR toolchains are installed. (Default: not set)
+Export the `$IAR_TOOL_ROOT` environment variable, pointing to the top-level location in which all the IAR toolchains are installed. (Default: `/opt/iarsystems`)
 
 | Examples                       | Effect                                                                |
 | :----------------------------  | :-------------------------------------------------------------------- |
