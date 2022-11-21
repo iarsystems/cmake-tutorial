@@ -8,12 +8,21 @@
 #
 
 # Environment variables that can be set for this script
+#
 # IAR_TOOL_ROOT
 #   Top-level location in which the IAR toolchains are installed
 #   MINGW64: with the full path (e.g.,) `/c/IAR_Systems/`
 #   Default: /opt/iarsystems
+#
 # IAR_LMS2_SERVER_IP
 #   If defined, automatic license setup will be performed
+#
+# MSYSTEM
+#   Only required for Windows hosts (e.g., MINGW64 or CYGWIN)
+#   Set by default by MINGW64 (and MINGW32)
+#   CygWin users: must manually export the variable to CYGWIN
+#   (e.g., export MSYSTEM=CYGWIN)
+#
 
 BUILD_CFGS=(Debug RelWithDebInfo Release MinSizeRel)
 
@@ -21,7 +30,7 @@ if ! ((${#IAR_TOOL_ROOT[@]})); then
   IAR_TOOL_ROOT=/opt/iarsystems
 fi
 
-if [ "$MSYSTEM" = "MINGW64" ]; then
+if [ ! -z "$MSYSTEM" ]; then
   EXT=.exe;
 fi
 
@@ -40,14 +49,13 @@ function lms2-setup() {
   fi
 }
 
-
 function find_icc() {
-  if [ "$MSYSTEM" = "MINGW64" ]; then
-    export CC=$(cygpath -m "${p}");
-    export CXX=$CC;
-  else
+  if [ -z "$MSYSTEM" ]; then
     export CC="${p}";
     export CXX="${p}";
+  else
+    export CC=$(cygpath -m "${p}");
+    export CXX=$CC;
   fi
   export TOOLKIT_DIR=$(dirname $(dirname $CC))
   echo "Using  CC: $CC";
@@ -55,16 +63,16 @@ function find_icc() {
 }
 
 function find_ilink() {
-  if [ "$MSYSTEM" = "MINGW64" ]; then
-    export ASM=$(cygpath -m $(dirname ${p})/iasm${a}${EXT});
-  else
+  if [ -z "$MSYSTEM" ]; then
     export ASM=$(dirname ${p})/iasm${a};
+  else
+    export ASM=$(cygpath -m $(dirname ${p})/iasm${a}${EXT});
   fi
   echo "Using ASM: $ASM";
 }
 
 function find_xlink() {
-  if [ "$MSYSTEM" = "MINGW64" ]; then
+  if [ ! -z "$MSYSTEM" ]; then
     export ASM=$(cygpath -m $(dirname ${p})/a${a}${EXT});
   else
     export ASM=$(dirname ${p})/a${a};
@@ -74,17 +82,19 @@ function find_xlink() {
 
 function cmake_configure() {
   rm -rf _builds;
-  if [ "$MSYSTEM" = "MINGW64" ]; then
-    CMAKE_MAKE_PRG=$(cygpath -m $(which ninja));
-  else
-    CMAKE_MAKE_PRG=$(which ninja);
+  # If no CMAKE_MAKE_PROGRAM is set, defaults to ninja
+  if [ -z "$CMAKE_MAKE_PROGRAM" ]; then
+    if [ -z "$MSYSTEM" ]; then
+      export CMAKE_MAKE_PROGRAM=$(which ninja);
+    else
+      export CMAKE_MAKE_PROGRAM=$(cygpath -m $(which ninja));
+    fi
   fi
-  if [ ! $CMAKE_MAKE_PRG ]; then
-    echo "FATAL ERROR: Ninja not found.";
+  if [ ! -f $CMAKE_MAKE_PROGRAM ]; then
+    echo "FATAL ERROR: CMAKE_MAKE_PROGRAM not found ($CMAKE_MAKE_PROGRAM). No ninja executable found either.";
     exit 1;
   fi
   cmake -B _builds -G "Ninja Multi-Config" \
-    -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PRG \
     -DTARGET_ARCH=${a} \
     -DTOOLKIT_DIR=${TOOLKIT_DIR};
   if [ $? -ne 0 ]; then
