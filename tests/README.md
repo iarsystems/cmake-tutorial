@@ -47,7 +47,6 @@ cd ~/cmake-tutorial/tests
 ## Procedure example using __Ubuntu on WSL2__
 The example below will test every tool found in `/opt/iarsystems` using Ubuntu (WSL2):
 ```bash
-export IAR_TOOL_ROOT=/opt/iarsystems
 git clone https://github.com/iarsystems/cmake-tutorial ~
 cd ~/cmake-tutorial/tests
 ./run-tests.sh
