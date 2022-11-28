@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 3.22)
 
 set(TOOLKIT_DIR $ENV{TOOLKIT_DIR})
-set(CMAKE_GENERATOR "Ninja Multi-Config")
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+
 list(APPEND CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo MinSizeRel)
 
 project(IAR-test LANGUAGES C CXX ASM)
 
-set(LINKER_MAP --map $<CONFIG>/$<TARGET_PROPERTY:NAME>.map)
+if(CMAKE_GENERATOR MATCHES "Ninja Multi-Config")
+  set(LINKER_MAP --map $<CONFIG>/$<TARGET_PROPERTY:NAME>.map)
+else()
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+  endif()
+  set(LINKER_MAP --map ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_PROPERTY:NAME>-${CMAKE_BUILD_TYPE}.map)
+endif()
 
 # arch-specific
 if(TARGET_ARCH STREQUAL arm)

@@ -35,8 +35,8 @@ Export the `$IAR_TOOL_ROOT` environment variable, pointing to the top-level loca
 ### IAR_LMS2_SERVER_IP (optional)
 Export the `IAR_LMS2_SERVER_IP` environment variable pointing to the license server, if the client's 1st-time license setup is required. Applies to the `-GL` and `-NW` products. (Default: not set)
 
-### CMAKE_MAKE_PROGRAM (optional)
-Export the `CMAKE_MAKE_PROGRAM` environment variable to specify which generator to use. (Default: `Ninja`)
+### CMAKE_GENERATOR (optional)
+Export the `CMAKE_GENERATOR` environment variable to specify which generator to use. (Default: `Ninja Multi-Config`)
 
 ### MSYSTEM
 This environment variable is automatically set by MSYS2, MINGW64 and MINGW32. Cygwin users must set it manually.
