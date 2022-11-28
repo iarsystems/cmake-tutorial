@@ -54,7 +54,7 @@ function lms2-setup() {
 }
 
 function find_icc() {
-  if [ -z "$MSYSTEM" ]; then
+  if [ "$MSYSTEM" = "" ]; then
     export CC="${p}";
     export CXX="${p}";
   else
@@ -67,7 +67,7 @@ function find_icc() {
 }
 
 function find_ilink() {
-  if [ -z "$MSYSTEM" ]; then
+  if [ "$MSYSTEM" = "" ]; then
     export ASM=$(dirname ${p})/iasm${a};
   else
     export ASM=$(cygpath -m $(dirname ${p})/iasm${a}${EXT});
@@ -76,7 +76,7 @@ function find_ilink() {
 }
 
 function find_xlink() {
-  if [ ! -z "$MSYSTEM" ]; then
+  if [ "$MSYSTEM" = "" ]; then
     export ASM=$(cygpath -m $(dirname ${p})/a${a}${EXT});
   else
     export ASM=$(dirname ${p})/a${a};
@@ -84,12 +84,10 @@ function find_xlink() {
   echo "Using ASM_COMPILER: $ASM";
 }
 
-function cmake_configure() {
-  # Remove stale builds
-  rm -rf _build*;
+function cmake_set_gen() {
   # If no CMAKE_GENERATOR is set, defaults to `Ninja Multi-Config`
-  if [ -z "${CMAKE_GENERATOR}" ]; then
-    if [ -z "$MSYSTEM" ]; then
+  if [ "$CMAKE_GENERATOR" = "" ]; then
+    if [ "$MSYSTEM" = "" ]; then
       export CMAKE_MAKE_PROGRAM=$(which ninja);
     else
       export CMAKE_MAKE_PROGRAM=$(cygpath -m $(which ninja));
@@ -102,6 +100,11 @@ function cmake_configure() {
   else
     export CONFIGURATION_TYPES=(Debug Release RelWithDebInfo MinSizeRel)
   fi
+}
+
+function cmake_configure() {
+  # Remove stale builds
+  rm -rf _build*;
   if [ -z ${CONFIGURATION_TYPES} ]; then
     cmake -B_builds -DTARGET_ARCH=${a} -DTOOLKIT_DIR=${TOOLKIT_DIR};
   else
@@ -175,6 +178,8 @@ function cmake_build() {
 
   fi
 }
+
+cmake_set_gen;
 
 echo "----------- ilink tools";
 ILINK_TOOL=(arm riscv rh850 rl78 rx stm8);
