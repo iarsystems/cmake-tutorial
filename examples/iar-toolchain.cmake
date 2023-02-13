@@ -8,6 +8,9 @@ set(TOOLKIT arm)
 # Get the toolchain target from the TOOLKIT
 get_filename_component(CMAKE_SYSTEM_PROCESSOR ${TOOLKIT} NAME)
 
+# Set CMake for cross-compiling
+set(CMAKE_SYSTEM_NAME Generic)
+
 # IAR C Compiler
 find_program(CMAKE_C_COMPILER
   NAMES icc${CMAKE_SYSTEM_PROCESSOR}
