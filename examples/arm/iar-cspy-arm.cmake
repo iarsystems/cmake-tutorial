@@ -2,13 +2,32 @@
 # to execute the `IAR C-SPY Command-line Utility (cspybat.exe)`
 
 function(iar_cspy_add_test TARGET TEST_NAME EXPECTED_OUTPUT)
+  find_program(CSPY_BAT
+    NAMES cspybat CSpyBat
+    PATHS ${TOOLKIT_DIR}/../common
+    PATH_SUFFIXES bin
+    REQUIRED )
+
+  # Check if C-SPY is being run from BX
+  if(WIN32)
+    set(libPREFIX "")
+    set(libPROCsuffix proc.dll)
+    set(libSIM2suffix sim2.dll)
+    set(libBATsuffix bat.dll)
+  else()
+    set(libPREFIX lib)
+    set(libPROCsuffix PROC.so)
+    set(libSIM2suffix SIM2.so)
+    set(libBATsuffix Bat.so)
+  endif()
+
   # Add a test for CTest
   add_test(NAME ${TEST_NAME}
-           COMMAND ${TOOLKIT_DIR}/../common/bin/cspybat --silent
+           COMMAND ${CSPY_BAT} --silent
            # C-SPY drivers
-           "${TOOLKIT_DIR}/bin/${CMAKE_SYSTEM_PROCESSOR}proc.dll"
-           "${TOOLKIT_DIR}/bin/${CMAKE_SYSTEM_PROCESSOR}sim2.dll"
-           "--plugin=${TOOLKIT_DIR}/bin/${CMAKE_SYSTEM_PROCESSOR}bat.dll"
+           "${TOOLKIT_DIR}/bin/${libPREFIX}${CMAKE_SYSTEM_PROCESSOR}${libPROCsuffix}"
+           "${TOOLKIT_DIR}/bin/${libPREFIX}${CMAKE_SYSTEM_PROCESSOR}${libSIM2suffix}"
+           "--plugin=${TOOLKIT_DIR}/bin/${libPREFIX}${CMAKE_SYSTEM_PROCESSOR}${libBATsuffix}"
            --debug_file=$<TARGET_FILE:${TARGET}>
            $<IF:$<BOOL:$<TARGET_PROPERTY:${TARGET},DMAC>>,--device_macro=$<TARGET_PROPERTY:${TARGET},DMAC>,>
            # C-SPY macros settings
