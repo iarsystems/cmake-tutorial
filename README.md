@@ -1,4 +1,4 @@
-# Tutorial <br>Building and testing with the IAR Systems tools in CMake
+# Tutorial <br>Building and testing with the IAR tools in CMake
 
 [CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process through simple configuration files to generate native build scripts for a chosen build system (e.g. ninja, make, etc.). For full documentation visit the [CMake Documentation Page][url-cm-docs].
 
@@ -9,7 +9,7 @@ The core ideas presented were inspired by the [Technical Note 190701][url-iar-do
 ## Pre-requisites
 This tutorial assumes that:
 
-* __The reader is familiar with the usage of the IAR Systems tools, as well as with the Kitware tools, from their respective command-line interfaces.__
+* __The reader is familiar with the usage of the IAR tools, as well as with the Kitware tools, from their respective command-line interfaces.__
 
 * This repository is cloned to the development computer (alternatively it can be downloaded as a zip archive via the __Code__ button).
 
@@ -207,7 +207,7 @@ Found an issue or have a suggestion related to the [__cmake-tutorial__][url-repo
 - If creating a [new][url-repo-issue-new] issue, please describe it in detail.   
 
 ## Conclusion
-This tutorial provided information on how to start building embedded software projects and, also, on how to perform automated tests when using the IAR Systems' tools with CMake. Once the core ideas presented here are mastered, the possibilities are only limited by the developer's mind. Such a setup might be useful depending on each organization's needs and can be used as a starting point for particular customizations.
+This tutorial provided information on how to start building embedded software projects and, also, on how to perform automated tests when using the IAR tools with CMake. Once the core ideas presented here are mastered, the possibilities are only limited by the developer's mind. Such a setup might be useful depending on each organization's needs and can be used as a starting point for particular customizations.
 
 <!-- links -->
 [url-repo-home]:         https://github.com/IARSystems/cmake-tutorial
