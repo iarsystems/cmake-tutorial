@@ -5,7 +5,7 @@ function(iar_cspy_add_test TARGET TEST_NAME EXPECTED_OUTPUT)
   find_program(CSPY_BAT
     NAMES cspybat CSpyBat
     PATHS ${TOOLKIT_DIR}/../common
-    PATH_SUFFIXES bin )
+    PATH_SUFFIXES bin)
 
   # Check if C-SPY is being run from BX
   if(WIN32)
