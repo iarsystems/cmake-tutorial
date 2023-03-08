@@ -13,20 +13,22 @@ set(CMAKE_SYSTEM_NAME Generic)
 
 # IAR C Compiler
 find_program(CMAKE_C_COMPILER
-  NAMES icc${CMAKE_SYSTEM_PROCESSOR}
+  NAMES icc${CMAKE_SYSTEM_PROCESSOR} icc${CMAKE_SYSTEM_PROCESSOR}.exe
   PATHS ${TOOLKIT}
         "$ENV{ProgramFiles}/IAR Systems/*"
         "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        "$ENV{HOME}/.wine/drive_c/Program Files/IAR Systems/*"
         /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
   PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
   REQUIRED )
 
 # IAR C++ Compiler
 find_program(CMAKE_CXX_COMPILER
-  NAMES icc${CMAKE_SYSTEM_PROCESSOR}
+  NAMES icc${CMAKE_SYSTEM_PROCESSOR} icc${CMAKE_SYSTEM_PROCESSOR}.exe
   PATHS ${TOOLKIT}
         "$ENV{PROGRAMFILES}/IAR Systems/*"
         "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        "$ENV{HOME}/.wine/drive_c/Program Files/IAR Systems/*"
         /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
   PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
   REQUIRED )
@@ -34,9 +36,11 @@ find_program(CMAKE_CXX_COMPILER
 # IAR Assembler
 find_program(CMAKE_ASM_COMPILER
   NAMES iasm${CMAKE_SYSTEM_PROCESSOR} a${CMAKE_SYSTEM_PROCESSOR}
+        iasm${CMAKE_SYSTEM_PROCESSOR}.exe a${CMAKE_SYSTEM_PROCESSOR}.exe
   PATHS ${TOOLKIT}
         "$ENV{PROGRAMFILES}/IAR Systems/*"
         "$ENV{ProgramFiles\(x86\)}/IAR Systems/*"
+        "$ENV{HOME}/.wine/drive_c/Program Files/IAR Systems/*"
         /opt/iarsystems/bx${CMAKE_SYSTEM_PROCESSOR}
   PATH_SUFFIXES bin ${CMAKE_SYSTEM_PROCESSOR}/bin
   REQUIRED )
