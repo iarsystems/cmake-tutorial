@@ -1,6 +1,6 @@
 # Tutorial <br>Building and testing with the IAR tools in CMake
 
-[CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process - using simple configuration files - to generate native build scripts for a selected build system, like ninja, make, etc.). For detailed documentation, visit the [CMake Documentation Page][url-cm-docs].
+[CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process - using simple configuration files - to generate native build scripts for a selected build system, like ninja, make, etc. For detailed documentation, visit the [CMake Documentation Page][url-cm-docs].
 
 This tutorial serves as a very basic-level guide to using CMake together with the __IAR C/C++ compilers__ to cross-compile embedded software applications for the supported target architectures.
 The core ideas presented were inspired by [Technical Note 190701][url-iar-docs-tn190701].
@@ -113,7 +113,7 @@ In the minimal example, we had an initial overview of what you need to bootstrap
 ## Examples
 Now that you know how to use CMake to _configure_ and _build_ embedded projects developed with the IAR tools, you can start to explore how projects can be configured in greater detail.
    
-In this section you will find descriptions for the provided [examples](examples). Each __architecture__ (__<arch>__) subdirectory contains multiple examples.
+In this section you will find descriptions for the provided [examples](examples). Each __architecture__ (__`<arch>`__) subdirectory contains multiple examples.
    
 Optionally, each example's `CMakeLists.txt` file for target architectures contains the line `include(/path/to/iar-cspy-<arch>.cmake)` at the end, as an example that illustrates how to use CTest to invoke the __IAR C-SPY command line utility__ ([`cspybat.exe`][url-iar-docs-cspybat]) to perform automated tests using [macros][url-iar-docs-macros].
 
