@@ -15,13 +15,15 @@ This tutorial assumes that:
 
 * The required tools are already installed on the system, according to the table below:
 
-| __Tool__       | __Windows-based systems__ | __Linux-based systems__ |
-|----------------|---------------------------|-------------------------|
-| IAR C/C++ Compiler for...  | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`, <br>`8051`, `AVR`, `MSP430`, `STM8` or `V850` | `Arm`, `RISC-V`, `RL78`, `RX` or `RH850` |
-| CMake          | v3.23 or later | v3.23 or later |
-| Build engine   | [__Ninja__](https://ninja-build.org)  | [__Ninja__](https://ninja-build.org) |
+| __Tool__                                | __Windows-based systems__                                                                         | __Linux-based systems__                                            |
+|-----------------------------------------|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| IAR C/C++ Compiler for...               | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`,<br>`8051`, `AVR`, `MSP430`, `STM8` or `V850`              | `Arm`, `RISC-V`, `RL78`, `RX` or `RH850`                           |
+| [CMake 3.23+](https://cmake.org)        | Download and install the [latest][url-cmake-dl] for `-windows-x86_x64.msi`                        | Use the [Kitware APT repository](https://apt.kitware.com/) or,<br> if suitable, the distribution-provided package |
+| [Ninja 1.10+](https://ninja-build.org)  | Download the latest [ninja-win.zip][url-ninja-dl] and extract "ninja.exe" to a directory belonging to the `PATH` environment variable (like `C:\Windows\`) | Usually, the distribution-provided package should be enough |
 
->:bulb: On Linux-based systems, [`cmake`](https://cmake.org/install/) and [`ninja`](https://ninja-build.org/#:~:text=Getting%20Ninja,system%27s%20package%20manager) are normally found on the default search path, so that both can be executed directly from anywhere in the system. However, on Windows-based systems, this is not always the case. We recommend that their respective locations are on the search path, defined by the `PATH` environment variable. The same recommendation applies to using `cmake.exe` with other generators such as `"Unix Makefiles"` that rely on `make.exe` as the build system. In such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately during the toolchain configuration step with a descriptive error message (for example, "`CMAKE_MAKE_PROGRAM not found`").
+>:penguin: Recent **Linux distributions** offer relatively up-to-date packages for `cmake` and `ninja`. Once installed, these executables are normally found on the default search path, so that both can be executed directly from anywhere in the system. You can follow the official [Kitware's APT repository](https://apt.kitware.com/) instructions so you can use it with your package manager to stay always up-to-date.
+>
+>:thought_balloon: On **Windows-based systems**, the `cmake-<version>-windows-x86_x64.msi` installer wizard will offer you the choice of _adding the CMake directory to the system PATH for all users_ so that CMake can be executed from anywhere in your system. For the `ninja.exe` executable from the [`ninja-win.zip`](https://github.com/ninja-build/ninja/releases/latest) binary distribution archive, you can extract it to the CMake's `bin` directory inside its installation directory, or any other potential directory belonging to the `PATH` environment variable (like `C:\Windows\`). The same recommendation applies for when using CMake with alternative generators. For example, when using `cmake -G "Unix Makefiles"`, instead of `ninja.exe` you will need to use `make.exe` to build. In such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately when you try to run the toolchain configuration step, returning with a fatal error message (for example, "`CMAKE_MAKE_PROGRAM not found`").
 
 
 ## Building Projects
@@ -217,6 +219,9 @@ This tutorial provides information on how to start building embedded software pr
 [url-iar-docs-macros]:   https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=417
 [url-iar-docs-cspybat]:  https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=503
 [url-iar-docs-ext-elf]:  https://www.iar.com/knowledge/support/technical-notes/debugger/debugging-an-externally-built-executable-file/
+   
+[url-cmake-dl]:          https://github.com/kitware/cmake/releases/latest
+[url-ninja-dl]:          https://github.com/ninja-build/ninja/releases/latest
 
 [url-gh-docs-notify]:    https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications
    
