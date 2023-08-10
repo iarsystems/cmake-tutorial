@@ -203,9 +203,10 @@ When target applications are built with _debug information_, they can be debugge
 The [Debugging an Externally Built Executable file][url-iar-docs-ext-elf] Technical Note has instructions for setting up a __debug-only__ project.
    
 ## Issues
-Did you find an issue or do you have a suggestion related to the [__cmake-tutorial__][url-repo-home] tutorial? Please use the public issue tracker.
-- Do not forget to take a look at [earlier issues][url-repo-issue-old].
-- If you are reporting a [new][url-repo-issue-new] issue, please describe it in detail.   
+Did you find an issue or do you have a question related to the __cmake-tutorial__ tutorial?
+- Visit the [cmake-tutorial wiki](https://github.com/IARSystems/cmake-tutorial/wiki).
+- Check the public issue tracker for [earlier issues][url-repo-issue-old].
+   - If you are reporting a [new][url-repo-issue-new] issue, please describe it in detail.   
 
 ## Conclusion
 This tutorial provides information on how to start building embedded software projects and, also, on how to perform automated tests when using the IAR tools with CMake. When you have understood the core ideas presented here, a world of possibilities opens up. Such a setup might be useful depending on your organization's needs, and can be used as a starting point for particular customizations.
