@@ -3,7 +3,6 @@
 [CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process - using simple configuration files - to generate native build scripts for a selected build system, like ninja, make, etc. For detailed documentation, visit the [CMake Documentation Page][url-cm-docs].
 
 This tutorial serves as a very basic-level guide to using CMake together with the __IAR C/C++ compilers__ to cross-compile embedded software applications for the supported target architectures.
-The core ideas presented were inspired by [Technical Note 190701][url-iar-docs-tn190701].
 
 
 ## Prerequisites
@@ -17,9 +16,11 @@ This tutorial assumes that:
 
 | __Tool__                                | __Windows-based systems__                                                                         | __Linux-based systems__                                            |
 |-----------------------------------------|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| IAR C/C++ Compiler for...               | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`,<br>`8051`, `AVR`, `MSP430`, `STM8` or `V850`              | `Arm`, `RISC-V`, `RL78`, `RX` or `RH850`                           |
+| IAR C/C++ Compiler for...               | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`,<br>`8051`, `AVR`, `MSP430`, `STM8` or `V850`              | `Arm`, `AVR`, `RISC-V`, `RL78`, `RX` or `RH850`                           |
 | [CMake 3.23+](https://cmake.org)        | Download and install the [latest][url-cmake-dl] for `-windows-x86_x64.msi`                        | Use the [Kitware APT repository](https://apt.kitware.com/) or,<br> if suitable, the distribution-provided package |
 | [Ninja 1.10+](https://ninja-build.org)  | Download the latest [ninja-win.zip][url-ninja-dl] and extract "ninja.exe" to a directory belonging to the `PATH` environment variable (like `C:\Windows\`) | Usually, the distribution-provided package should be enough |
+
+>:warning: Before being able to start using CMake, make sure the compiler license is activated. Refer to your product's documentation for details.
 
 >:penguin: Recent **Linux distributions** offer relatively up-to-date packages for `cmake` and `ninja`. Once installed, these executables are normally found on the default search path, so that both can be executed directly from anywhere in the system. You can follow the official [Kitware's APT repository](https://apt.kitware.com/) instructions so you can use it with your package manager to stay always up-to-date.
 >
@@ -216,7 +217,6 @@ This tutorial provides information on how to start building embedded software pr
 [url-repo-issue-new]:    https://github.com/IARSystems/cmake-tutorial/issues/new
 [url-repo-issue-old]:    https://github.com/IARSystems/cmake-tutorial/issues?q=is%3Aissue+is%3Aopen%7Cclosed
    
-[url-iar-docs-tn190701]: https://www.iar.com/knowledge/support/technical-notes/general/using-cmake-with-iar-embedded-workbench/
 [url-iar-docs-macros]:   https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=417
 [url-iar-docs-cspybat]:  https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=503
 [url-iar-docs-ext-elf]:  https://www.iar.com/knowledge/support/technical-notes/debugger/debugging-an-externally-built-executable-file/
