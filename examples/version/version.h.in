@@ -1,0 +1,4 @@
+// TODO 4: Define the C macros with the CMake placeholders for version 
+#define Project_VERSION_MAJOR 
+#define Project_VERSION_MINOR 
+#define Project_VERSION_PATCH 

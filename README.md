@@ -1,234 +1,167 @@
-# Tutorial <br>Building and testing with the IAR tools in CMake
+# Building CMake projects with IAR
 
-[CMake][url-cm-home] is an open-source, cross-platform family of tools maintained and supported by [Kitware][url-cm-kitware]. CMake is used to control the software compilation process - using simple configuration files - to generate native build scripts for a selected build system, like ninja, make, etc. For detailed documentation, visit the [CMake Documentation Page][url-cm-docs].
+CMake is an open-source, cross-platform family of tools maintained and supported by Kitware. Among its many features, it essentially provides [Makefile Generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#id11) and [Ninja Generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#id12) which compose scripts for cross-compiling C/C++ embedded software projects based on one or more `CMakeLists.txt` configuration files.
 
-This tutorial serves as a very basic-level guide to using CMake together with the __IAR C/C++ compilers__ to cross-compile embedded software applications for the supported target architectures.
-
+This tutorial offers a short introduction for those seeking information on how to start using the IAR C/C++ Compiler together with CMake from the command line. While this guide is based on the IAR Build Tools for Arm version 9.50.1 on Linux, it should work with other supported IAR products with no or minimal changes.
 
 ## Prerequisites
-This tutorial assumes that:
+Before you begin, you will need to download and install the IAR product, CMake and then clone this repository.
 
-* You are familiar with using the IAR and Kitware tools on the command line.
+1) Download, install and activate[^1] your IAR product
 
-* This repository is cloned to the development computer (it can also be downloaded as a zip archive by clicking the __Code__ button).
+| __Product__            | __Evaluation__                                 | __IAR Customers (login required)__                |
+| -                      | -                                              | -                                                 |
+| IAR Build Tools        | [Contact us](https://iar.com/about/contact) | [for Arm](https://updates.iar.com/?product=BXARM) (or for others[^2]) |
+| IAR Embedded Workbench | [Download](https://iar.com/downloads)          | [for Arm](https://updates.iar.com/?product=EWARM) (or for others[^2]) |
+     
+2) Download and install [CMake](https://github.com/Kitware/CMake/releases/latest).
 
-* The required tools are already installed on the system, according to the table below:
+3) Clone this repository to your computer. For more information, see ["Cloning a repository"](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
-| __Tool__                                | __Windows-based systems__                                                                         | __Linux-based systems__                                            |
-|-----------------------------------------|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| IAR C/C++ Compiler for...               | `Arm`, `RISC-V`, `RL78`, `RX`, `RH850`,<br>`8051`, `AVR`, `MSP430`, `STM8` or `V850`              | `Arm`, `AVR`, `RISC-V`, `RL78`, `RX` or `RH850`                           |
-| [CMake 3.23+](https://cmake.org)        | Download and install the [latest][url-cmake-dl] for `-windows-x86_x64.msi`                        | Use the [Kitware APT repository](https://apt.kitware.com/) or,<br> if suitable, the distribution-provided package |
-| [Ninja 1.10+](https://ninja-build.org)  | Download the latest [ninja-win.zip][url-ninja-dl] and extract "ninja.exe" to a directory belonging to the `PATH` environment variable (like `C:\Windows\`) | Usually, the distribution-provided package should be enough |
+## Building a Basic CMake Project
+The most basic CMake project is an executable built from a single source code file. For simple projects like this, a `CMakeLists.txt` file with about half dozen of commands is all that is required.
 
->:warning: Before being able to start using CMake, make sure the compiler license is activated. Refer to your product's documentation for details.
+Any project's topmost `CMakeLists.txt` must start by specifying a minimum CMake version using the [`cmake_minimum_required()`][url-help-cmake_minimum_required] command. This establishes policy settings and ensures that CMake functions used in the project are run with a compatible version of CMake.
 
->:penguin: Recent **Linux distributions** offer relatively up-to-date packages for `cmake` and `ninja`. Once installed, these executables are normally found on the default search path, so that both can be executed directly from anywhere in the system. You can follow the official [Kitware's APT repository](https://apt.kitware.com/) instructions so you can use it with your package manager to stay always up-to-date.
->
->:thought_balloon: On **Windows-based systems**, the `cmake-<version>-windows-x86_x64.msi` installer wizard will offer you the choice of _adding the CMake directory to the system PATH for all users_ so that CMake can be executed from anywhere in your system. For the `ninja.exe` executable from the [`ninja-win.zip`](https://github.com/ninja-build/ninja/releases/latest) binary distribution archive, you can extract it to the CMake's `bin` directory inside its installation directory, or any other potential directory belonging to the `PATH` environment variable (like `C:\Windows\`). The same recommendation applies for when using CMake with alternative generators. For example, when using `cmake -G "Unix Makefiles"`, instead of `ninja.exe` you will need to use `make.exe` to build. In such a scenario, if the `make.exe` program cannot be found, CMake will fail immediately when you try to run the toolchain configuration step, returning with a fatal error message (for example, "`CMAKE_MAKE_PROGRAM not found`").
+To start a project, use the [`project()`][url-help-project] command to set the project name. This call is required with every project and should be called soon after [`cmake_minimum_required()`][url-help-cmake_minimum_required]. This command can also be used to specify other project level information such as the language(s) used or its version number.
 
+Use the [`add_executable()`][url-help-add_executable] command to tell CMake to create an executable using the specified source code files.
 
-## Building Projects
-To use CMake to build a project developed with an IAR compiler, you need at least:
-* A toolchain file
-* A `CMakeLists.txt` file
-* The application source code
+Then use [`target_sources()`][url-help-target_sources] to list the source files required to build the target.
 
-### Configuring the toolchain file
-By default, CMake uses what it assumes to be the host platform's default compiler. When the application targets an embedded platform (known as cross-compiling), a toolchain file `<toolchain-file>.cmake` can be used to specify the intended toolchain's location to its compiler and assembler. This section provides a simple generic template for the __IAR C/C++ compilers__.
+Use [`target_compile_options()`][url-help-target_compile_options] for setting up the compiler options to build the target.
 
-In the [`examples/iar-toolchain.cmake`](examples/iar-toolchain.cmake) file:
-* Set the `TOOLKIT` variable to the compiler's target architecture.
+And finally, set your target's linker options with [`target_link_options()`][url-help-target_link_options]:
+
 ```cmake
-# Action: Set the TOOLKIT variable
-# Examples: arm, riscv, rh850, rl78, rx, stm8, 430, 8051, avr or v850
-# Alternative: override the default TOOLKIT (/path/to/installation/<arch>)
-set(TOOLKIT arm)
+# set the minimum required version of CMake to be 3.20
+cmake_minimum_required(VERSION 3.20)
+
+# set the project name
+project(Tutorial)
+
+# add the executable target
+add_executable(tutorial)
+
+# target sources
+target_sources(tutorial PRIVATE tutorial.c)
+
+# compiler options
+target_compile_options(tutorial PRIVATE --cpu=cortex-m4)
+
+# linker options
+target_link_options(tutorial PRIVATE --semihosting)
 ```
->:bulb: The default toolchain file will search for an available compiler on the default installation paths. You can also use the `TOOLKIT` variable to set a specific installation directory (for example, `C:/IAR/EWARM/N.nn`).
-   
-### A minimal project
-A CMake project is defined by one or more `CMakeLists.txt` file(s). This is how a simple `hello-world` project can be configured for the Arm target architecture:
 
-* Change the directory to the `hello-world` project:
+### Enabling the IAR Compiler
+CMake uses the host platform's default compiler. When cross-compiling embedded applications, the compiler must be set manually via [`CMAKE_<lang>_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) variables for each supported language. Additionally, it is possible to specify a build tool via [`CMAKE_MAKE_PROGRAM`]():
+
+| Variable             | Description                               | Examples                                                                        |
+| -                    | -                                         | -                                                                               |
+| `CMAKE_C_COMPILER`   | Must point to the C Compiler executable   | `"C:/Program Files/..../arm/bin/iccarm.exe"`<br>`"/opt/iarsystems/bxarm/arm/bin/iccarm"`   |
+| `CMAKE_CXX_COMPILER` | Must point to the C++ Compiler executable | `"C:/Program Files/..../arm/bin/iccarm.exe"`<br>`"/opt/iarsystems/bxarm/arm/bin/iccarm"`   |
+| `CMAKE_ASM_COMPILER` | Must point to the Assembler executable    | `"C:/Program Files/..../arm/bin/iasmarm.exe"`<br>`"/opt/iarsystems/bxarm/arm/bin/iasmarm"` |
+| `CMAKE_MAKE_PROGRAM` | Must point to the build tool executable | `"C:/Program Files/..../common/bin/ninja.exe"`<br>`"/opt/iarsystems/bxarm/common/bin/ninja"` |
+
+CMake reads these variables from
+- a separate file called "toolchain file" (for example by invoking `cmake` with [`--toolchain /path/to/bxarm.cmake`](tutorial/bxarm.cmake)) -or-
+- invoking `cmake` with `-DCMAKE_<lang>_COMPILER=...` on the command line, during the configuration phase -or-
+- the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler.
+- the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects.
+
+### Configure and Build
+We are ready to build our first project! Run CMake to configure the project and then build it with your chosen build tool.
+
+- Before starting to use CMake, make sure your compiler is working and does not run into any [license issues](#issues). Example (for Arm):
 ```
-cd /path/to/cmake-tutorial/examples/arm/hello-world
+/path/to/iccarm --version
 ```
 
-* Verify the contents of the `CMakeLists.txt` file:
-
-https://github.com/IARSystems/cmake-tutorial/blob/985f597765bd1186867b4157af3d1afde6531943/examples/arm/hello-world/CMakeLists.txt#L1-L16
-
-> :bulb: Adjust the target compiling/linking options for architectures other than __arm__. 
-
-* Verify the contents of the `main.c` source file:
-
-https://github.com/IARSystems/cmake-tutorial/blob/985f597765bd1186867b4157af3d1afde6531943/examples/arm/hello-world/main.c#L1-L9
-   
-###  Configuring the build system generator
-Once you have created the minimal project with a suitable toolchain file, invoke CMake to configure the build environment for cross-compiling, choosing the _build system generator_ and _toolchain file_ to use for the project.
-
-In this example, take advantage of the `"Ninja Multi-Config"` generator option. This option can be used to generate build configurations for "Debug" and "Release" purposes. The general recommendation when using CMake is to perform an "out-of-source" build, which means creating a subdirectory for the output files.
- 
- * Use the following command to generate the scripts for the build system inside the `_builds` subdirectory:
+- From the terminal, navigate to the [tutorial](tutorial) directory and create a build directory:
 ```
-cmake -B_builds -G "Ninja Multi-Config" --toolchain /path/to/iar-toolchain.cmake
+mkdir build
 ```
->:bulb: The `cmake --help` command provides more information.   
 
-<details><summary><b>Expected output example</b> (click to expand):</summary>
-   
->```
->-- The C compiler identification is IAR ARM N.nn
->-- Detecting C compiler ABI info
->-- Detecting C compiler ABI info - done
->-- Check for working C compiler: /path/to/toolkit_dir/bin/iccarm.exe - skipped
->-- Detecting C compile features
->-- Detecting C compile features - done
->-- Configuring done
->-- Generating done
->-- Build files have been written to: /path/to/cmake-tutorial/examples/arm/hello-world/_builds
->```
-   
-</details>
-
->:warning: If by mistake the configuration step fails (for example, because of using the wrong option, the wrong selection, etc.), you might have to remove the `_builds` subdirectory before you try again. This helps CMake to avoid potential cache misses interference during the new attempt.
-
-### Building the project
-* Once the `_builds` tree is configured, use CMake with the `--build` flag to build the project:
+- Next, navigate to that build directory and run CMake to configure the project and generate a native build system using the compiler specified in the `bxarm.cmake` toolchain file (if needed, edit the supplied toolchain file to match your tool):
 ```
-cmake --build _builds
+cd build
+cmake .. -G Ninja --toolchain ../bxarm.cmake
 ```
->:bulb: The `cmake --help` command provides more information.   
 
-<details><summary><b>Expected output example</b> (click to unfold):</summary>
-   
->```
->[2/2] Linking C executable Debug\hello-world.elf
->```
-   
-</details>   
-  
-In the minimal example, we had an initial overview of what you need to bootstrap a CMake project for a simple executable file. Targets created from actual embedded software projects will typically require preprocessor symbols, compiler options, linker options and extended options. Additional project examples for the target architectures supported by CMake are provided as reference in the "[Examples](#examples)" section of this tutorial.
+- Then call CMake for building the executable using the build system:
+```
+cmake --build .
+```
 
+## Run
+Let's test the application. To run the executable you will need the non-interactive[^3] command line interface for the IAR C-SPY Debugger (`cspybat`) with the proper drivers for the desired target. Amongst the many ways of accomplishing this, let's take advantage of the `add_test()` for testing the application in a Arm Cortex-M4 simulated target.
 
-## Examples
-Now that you know how to use CMake to _configure_ and _build_ embedded projects developed with the IAR tools, you can start to explore how projects can be configured in greater detail.
-   
-In this section you will find descriptions for the provided [examples](examples). Each __architecture__ (__`<arch>`__) subdirectory contains multiple examples.
-   
-Optionally, each example's `CMakeLists.txt` file for target architectures contains the line `include(/path/to/iar-cspy-<arch>.cmake)` at the end, as an example that illustrates how to use CTest to invoke the __IAR C-SPY command line utility__ ([`cspybat.exe`][url-iar-docs-cspybat]) to perform automated tests using [macros][url-iar-docs-macros].
+ In this example we will use Arm. To do so, we need to change the Tutorial's `CMakeLists.txt`:
+- Firstly add [`enable_testing()`](https://cmake.org/cmake/help/latest/command/enable_testing.html#command:enable_testing) to enable testing:
+```cmake
+enable_testing()
+```
 
-### Example 1 - Mixing C and assembler source code
-The `examples/<arch>/mix-c-asm` example project demonstrates the basic concepts of building a single executable file (`mixLanguages`) using __C__ and __assembler__ source code.
+- Then use [`add_test()`](https://cmake.org/cmake/help/latest/command/add_test.html#add-test) to encapsulate the command line `cspybat` needs. In the example below, the parameters are adjusted for simulating a generic Arm Cortex-M4 target environment:
+```cmake
+add_test(NAME tutorialTest
+         COMMAND /opt/iarsystems/bxarm/common/bin/CSpyBat
+         # C-SPY drivers for the Arm simulator via command line interface
+         /opt/iarsystems/bxarm/arm/bin/libarmPROC.so
+         /opt/iarsystems/bxarm/arm/bin/libarmSIM2.so
+         --plugin=/opt/iarsystems/bxarm/arm/bin/libarmLibsupportUniversal.so
+         # The target executable (built with debug information)
+         --debug_file=$<TARGET_FILE:tutorial>
+         # C-SPY driver options
+         --backend
+           --cpu=cortex-m4
+           --semihosting)
+```
 
-It also shows how to use `target_compile_definitions()` to set preprocessor symbols that can be used in the target source code.
+- Now use the [`PASS_REGULAR_EXPRESSION`](https://cmake.org/cmake/help/latest/prop_test/PASS_REGULAR_EXPRESSION.html#prop_test:PASS_REGULAR_EXPRESSION) test property to validate if the program emits the expected string to the standard output (`stdout`). In this case, verifying that the usage message is printed when an incorrect number of arguments is provided.
+```cmake
+set_tests_properties(tutorialTest PROPERTIES PASS_REGULAR_EXPRESSION "Hello world!")
+```
 
+- Since `CMakeLists.txt` was modified, the build system needs to be reconfigured:
+```
+cmake --build .
+```
 
-### Example 2 - Creating and using libraries
-The `examples/<arch>/using-libs` example project demonstrates some advanced features and building one executable file (`myProgram`) linked with a static library file (`myMath`) using __C__ source code.
-
-The top-level directory contains a `CMakeLists.txt` file that will add the `lib` and the `app` subdirectories, each one containing its own `CMakeLists.txt`.
-   
-The `myMath` library file is located in the `lib` subdirectory. The library contains functions that take two integer parameters to perform basic arithmetic on, returning another integer as the result.
-
-The `myProgram` executable file is located in the `app` subdirectory. The application performs arithmetic operations using the functions in the `myMath` library.
-
-It also shows:
-* How to use `set_target_properties()` to propagate configuration details across the target options.
-* How to set `target_link_options()` to create a map file of the executable file.
-* How to use `add_custom_command()` for generating `.bin`/`.hex`/`.srec` output using the `ielftool` utility. 
-
-   
-### Testing the examples
-CTest is an extension of CMake that can help you perform automated tests. With CTest, you can execute the target application directly on your host PC, evaluating its exit code.
-   
-When cross-compiling, it is not possible to execute the target application directly on your host PC. However, you can execute the target application using the __IAR C-SPY Debugger__ and, for example, a custom function that wraps the required parameters (for example, `iar_cspy_add_test()`). A module named `iar-cspy-<arch>.cmake` is included in the `CMakeLists.txt` files for target architectures and illustrates the concept.
-   
->:warning: This section requires the __IAR C-SPY command line utility__ (`cspybat.exe`), which is installed with __IAR Embedded Workbench__.   
-
-* Test the desired project example (*built with debug information*) by executing:
- ```
- ctest --test-dir _builds --build-config Debug --output-on-failure --timeout 10
- ```
->:bulb: The `ctest --help` command provides more information.   
-   
-<details><summary>Expected output - <b>Example 1</b> (click to unfold):</summary>
-   
->```
->Internal ctest changing into directory: C:/path/to/cmake-tutorial/examples/<arch>/mix-c-asm/_builds
->Test project C:/path/to/cmake-tutorial/examples/<arch>/mix-c-asm/_builds
->    Start 1: test_mynum
->1/1 Test #1: test_mynum .......................   Passed    0.20 sec
->
->100% tests passed, 0 tests failed out of 1
->
->Total Test time (real) =   0.25 sec
->```
-   
-</details>   
-   
-<details><summary>Expected output - <b>Example 2</b> (click to unfold):</summary>
-   
->```
->Internal ctest changing into directory: C:/path/to/cmake-tutorial/examples/<arch>/using-libs/_builds
->Test project C:/path/to/cmake-tutorial/examples/<arch>/using-libs/_builds
->    Start 1: test_add
->1/3 Test #1: test_add .........................   Passed    0.44 sec
->    Start 2: test_sub
->2/3 Test #2: test_sub .........................***Failed  Required regular expression not found. Regex=[PASS]  0.44 sec
->-- app debug output begin --
->40 + 2 = 42
->-- C-SPY TEST:test_sub. Expected: 38 Result: FAIL
->40 - 2 = 39
->40 * 2 = 80
->-- app debug output end --
->
->    Start 3: test_mul
->3/3 Test #3: test_mul .........................   Passed    0.44 sec
->
->67% tests passed, 1 tests failed out of 3
->
->Total Test time (real) =   1.34 sec
->
->The following tests FAILED:
->          2 - test_sub (Failed)
->Errors while running CTest
->```
-   
-</details>      
-
- 
-## Debugging
-When target applications are built with _debug information_, they can be debugged with the __IAR C-SPY Debugger__, directly in the __IAR Embedded Workbench__ IDE.
-
-The [Debugging an Externally Built Executable file][url-iar-docs-ext-elf] Technical Note has instructions for setting up a __debug-only__ project.
-   
-## Issues
-Did you find an issue or do you have a question related to the __cmake-tutorial__ tutorial?
-- Visit the [cmake-tutorial wiki](https://github.com/IARSystems/cmake-tutorial/wiki).
-- Check the public issue tracker for [earlier issues][url-repo-issue-old].
-   - If you are reporting a [new][url-repo-issue-new] issue, please describe it in detail.   
+- And finally we call CMake's [`ctest`](https://cmake.org/cmake/help/latest/manual/ctest.1.html#manual:ctest(1)) which subsequently will execute `Tutorial.elf` using the IAR C-SPY Debugger for Arm:
+```
+ctest
+```
 
 ## Conclusion
-This tutorial provides information on how to start building embedded software projects and, also, on how to perform automated tests when using the IAR tools with CMake. When you have understood the core ideas presented here, a world of possibilities opens up. Such a setup might be useful depending on your organization's needs, and can be used as a starting point for particular customizations.
+And this is what you need to know to start using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for more information.
+
+## Issues
+Use the [CMake Issue Tracker](https://gitlab.kitware.com/cmake/cmake/-/issues/) to report CMake-related software defects.
+
+For questions/suggestions specifically related to this tutorial:
+- Try the [wiki][url-repo-wiki].
+- Check for [earlier issues][url-repo-issue-old] in the issue tracker.
+- If nothing helps, create a [new issue][url-repo-issue-new], describing in detail.
+
+Do not use the issue tracker if you need technical support. The issue tracker **is not a support forum**:
+- If you run into license issues, refer to [IAR Customer Care](https://iar.com/knowledge/support/licensing-faq/).
+- If you run into tools issues, contact [IAR Tech Support](https://iar.com/knowledge/support/request-technical-support/).
+
+[^1]: For more information, see the "Installation and Licensing" guide for your product. If you do not have a license, [contact us](https://iar.com/about/contact).
+[^2]: CMake has built-in IAR C/C++ Compiler support for the following non-Arm architectures: 8051, AVR, MSP430, RH850, RISC-V, RL78, RX, STM8 and V850.
+[^3]: For interactively debugging of executable files (`*.elf`) using the C-SPY Debugger from the IAR Embedded Workbench IDE, read [this technical note][url-iar-docs-ext-elf].
 
 <!-- links -->
-[url-repo-home]:         https://github.com/IARSystems/cmake-tutorial
-[url-repo-issue-new]:    https://github.com/IARSystems/cmake-tutorial/issues/new
-[url-repo-issue-old]:    https://github.com/IARSystems/cmake-tutorial/issues?q=is%3Aissue+is%3Aopen%7Cclosed
-   
-[url-iar-docs-macros]:   https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=417
-[url-iar-docs-cspybat]:  https://wwwfiles.iar.com/arm/webic/doc/EWARM_DebuggingGuide.ENU.pdf#page=503
-[url-iar-docs-ext-elf]:  https://www.iar.com/knowledge/support/technical-notes/debugger/debugging-an-externally-built-executable-file/
-   
-[url-cmake-dl]:          https://github.com/kitware/cmake/releases/latest
-[url-ninja-dl]:          https://github.com/ninja-build/ninja/releases/latest
+[url-repo-wiki]: https://github.com/IARSystems/cmake-tutorial/wiki
+[url-repo-issue-new]: https://github.com/IARSystems/cmake-tutorial/issues/new
+[url-repo-issue-old]: https://github.com/IARSystems/cmake-tutorial/issues?q=is%3Aissue+is%3Aopen%7Cclosed
 
-[url-gh-docs-notify]:    https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications
-   
-[url-cm-home]:           https://cmake.org
-[url-cm-docs]:           https://cmake.org/documentation
-[url-cm-docs-genex]:     https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html
-[url-cm-docs-ctest]:     https://cmake.org/cmake/help/latest/manual/ctest.1.html
-[url-cm-wiki]:           https://gitlab.kitware.com/cmake/community/-/wikis/home
-[url-cm-kitware]:        https://kitware.com
+[url-help-cmake_minimum_required]: https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html#command:cmake_minimum_required
+[url-help-project]: https://cmake.org/cmake/help/latest/command/project.html#command:project
+[url-help-add_executable]: https://cmake.org/cmake/help/latest/command/add_executable.html#command:add_executable
+[url-help-target_sources]: https://cmake.org/cmake/help/latest/command/target_sources.html#target-sources
+[url-help-target_compile_options]: https://cmake.org/cmake/help/latest/command/target_compile_options.html#target-compile-options
+[url-help-target_link_options]: https://cmake.org/cmake/help/latest/command/target_link_options.html#target-link-options
+
+[url-iar-docs-ext-elf]:  https://www.iar.com/knowledge/support/technical-notes/debugger/debugging-an-externally-built-executable-file/
