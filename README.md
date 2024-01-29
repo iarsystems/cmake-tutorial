@@ -64,9 +64,9 @@ CMake uses the host platform's default compiler. When cross-compiling embedded a
 | `CMAKE_MAKE_PROGRAM` | Must point to the build tool executable | `"C:/Program Files/..../common/bin/ninja.exe"`<br>`"/opt/iarsystems/bxarm/common/bin/ninja"` |
 
 CMake reads these variables from
-- a separate file called "toolchain file" (for example by invoking `cmake` with [`--toolchain /path/to/bxarm.cmake`](tutorial/bxarm.cmake)) -or-
-- invoking `cmake` with `-DCMAKE_<lang>_COMPILER=...` on the command line, during the configuration phase -or-
-- the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler.
+- a separate file called "toolchain file" that you invoke with [`--toolchain /path/to/<your-iar-toolchain-file>.cmake`](tutorial/bxarm.cmake)) -or-
+- invoking `cmake` with `-DCMAKE_<lang>_COMPILER=...` on the command line, during the configuration phase (useful for old CMake versions) -or-
+- the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler -or-
 - the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects.
 
 ### Configure and Build
@@ -133,8 +133,8 @@ cmake --build .
 ctest
 ```
 
-## Conclusion
-And this is what you need to know to start using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for more information.
+## Summary
+This tutorial covered the basics on using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for additional tips & tricks!
 
 ## Issues
 Use the [CMake Issue Tracker](https://gitlab.kitware.com/cmake/cmake/-/issues/) to report CMake-related software defects.
