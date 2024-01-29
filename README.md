@@ -23,7 +23,7 @@ The most basic CMake project is an executable built from a single source code fi
 
 Any project's topmost `CMakeLists.txt` must start by specifying a minimum CMake version using the [`cmake_minimum_required()`][url-help-cmake_minimum_required] command. This establishes policy settings and ensures that CMake functions used in the project are run with a compatible version of CMake.
 
-To start a project, use the [`project()`][url-help-project] command to set the project name. This call is required with every project and should be called soon after [`cmake_minimum_required()`][url-help-cmake_minimum_required]. This command can also be used to specify other project level information such as the language(s) used or its version number.
+To start a project, use the [`project()`][url-help-project] command to set the project name. This call is required with every project and should be called soon after `cmake_minimum_required()`. This command can also be used to specify other project level information such as the language(s) used or its version number.
 
 Use the [`add_executable()`][url-help-add_executable] command to tell CMake to create an executable using the specified source code files.
 
@@ -63,9 +63,10 @@ CMake uses the host platform's default compiler. When cross-compiling embedded a
 | `CMAKE_ASM_COMPILER` | Must point to the Assembler executable    | `"C:/Program Files/..../arm/bin/iasmarm.exe"`<br>`"/opt/iarsystems/bxarm/arm/bin/iasmarm"` |
 | `CMAKE_MAKE_PROGRAM` | Must point to the build tool executable | `"C:/Program Files/..../common/bin/ninja.exe"`<br>`"/opt/iarsystems/bxarm/common/bin/ninja"` |
 
-CMake reads these variables from
-- a separate file called "toolchain file" that you invoke with [`--toolchain /path/to/<your-iar-toolchain-file>.cmake`](tutorial/bxarm.cmake)) -or-
-- invoking `cmake` with `-DCMAKE_<lang>_COMPILER=...` on the command line, during the configuration phase (useful for old CMake versions) -or-
+During the configuration phase, CMake reads these variables from:
+- a separate file called "toolchain file" that you invoke `cmake` with `--toolchain /path/to/<filename>.cmake` (see provided example files [bxarm.cmake](tutorial/bxarm.cmake) and [ewarm.cmake](tutorial/ewarm.cmake)) -or-
+- the [`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/variable/CMAKE_TOOLCHAIN_FILE.html) variable, when you invoke with `cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/<filename>.cmake` (useful for earlier CMake versions) -or-
+- invoking `cmake` with `-DCMAKE_<lang>_COMPILER=/path/to/icc<target>` -or-
 - the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler -or-
 - the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects.
 
