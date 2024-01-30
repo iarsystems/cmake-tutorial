@@ -19,7 +19,6 @@ target_link_options(tutorial PRIVATE --semihosting)
 # TODO 1: Enable testing in CMake
 
 # TODO 2: Add a test named `tutorialTest` for `tutorial` (hint: use CSpyBat)
-add_test()
 
 # TODO 3: Set the `tutorialTest` test passing condition
-set_tests_properties()
+
