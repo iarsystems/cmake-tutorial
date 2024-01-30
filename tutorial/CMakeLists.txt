@@ -16,19 +16,10 @@ target_compile_options(tutorial PRIVATE --cpu=cortex-m4)
 # linker options
 target_link_options(tutorial PRIVATE --semihosting)
 
-enable_testing()
+# TODO 1: Enable testing in CMake
 
-add_test(NAME tutorialTest
-         COMMAND /opt/iarsystems/bxarm/common/bin/CSpyBat
-         # C-SPY drivers for the Arm simulator via command line interface
-         /opt/iarsystems/bxarm/arm/bin/libarmPROC.so
-         /opt/iarsystems/bxarm/arm/bin/libarmSIM2.so
-         --plugin=/opt/iarsystems/bxarm/arm/bin/libarmLibsupportUniversal.so
-         # The target executable (built with debug information)
-         --debug_file=$<TARGET_FILE:tutorial>
-         # C-SPY driver options
-         --backend
-           --cpu=cortex-m4
-           --semihosting)
+# TODO 2: Add a test named `tutorialTest` for `tutorial` (hint: use CSpyBat)
+add_test()
 
-set_tests_properties(tutorialTest PROPERTIES PASS_REGULAR_EXPRESSION "Hello world!")
+# TODO 3: Set the `tutorialTest` test passing condition
+set_tests_properties()

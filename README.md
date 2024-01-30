@@ -97,7 +97,7 @@ cmake --build .
 ## Run
 Let's test the application. To run the executable you will need the non-interactive[^3] command line interface for the IAR C-SPY Debugger (`cspybat`) with the proper drivers for the desired target. Amongst the many ways of accomplishing this, let's take advantage of the `add_test()` for testing the application in a Arm Cortex-M4 simulated target.
 
- In this example we will use Arm. To do so, we need to change the Tutorial's `CMakeLists.txt`:
+ In this example we will use Arm. To do so, you need to change the Tutorial's `CMakeLists.txt`:
 - Firstly add [`enable_testing()`](https://cmake.org/cmake/help/latest/command/enable_testing.html#command:enable_testing) to enable testing:
 ```cmake
 enable_testing()
@@ -119,7 +119,7 @@ add_test(NAME tutorialTest
            --semihosting)
 ```
 
-- Now use the [`PASS_REGULAR_EXPRESSION`](https://cmake.org/cmake/help/latest/prop_test/PASS_REGULAR_EXPRESSION.html#prop_test:PASS_REGULAR_EXPRESSION) test property to validate if the program emits the expected string to the standard output (`stdout`). In this case, verifying that the usage message is printed when an incorrect number of arguments is provided.
+- Now use the [`PASS_REGULAR_EXPRESSION`](https://cmake.org/cmake/help/latest/prop_test/PASS_REGULAR_EXPRESSION.html#prop_test:PASS_REGULAR_EXPRESSION) test property to validate if the program emits the expected string to the standard output (`stdout`). In this case, verifying that `printf()` prints the expected message.
 ```cmake
 set_tests_properties(tutorialTest PROPERTIES PASS_REGULAR_EXPRESSION "Hello world!")
 ```
