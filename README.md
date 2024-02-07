@@ -68,7 +68,7 @@ During the configuration phase, CMake reads these variables from:
 - the [`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/variable/CMAKE_TOOLCHAIN_FILE.html) variable, when you invoke `cmake` with `-DCMAKE_TOOLCHAIN_FILE=/path/to/<filename>.cmake` (useful for earlier CMake versions) -or-
 - invoking `cmake` with `-DCMAKE_<lang>_COMPILER=/path/to/icc<target>` -or-
 - the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler -or-
-- the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects (See [this article](https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debuging-from-the-Embedded-Workbench) for details).
+- the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects (See [this article](https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debugging-from-the-Embedded-Workbench) for details).
 
 ### Configure and Build
 We are ready to build our first project! Run CMake to configure the project and then build it with your chosen build tool.
@@ -165,4 +165,4 @@ Do not use the issue tracker if you need technical support. The issue tracker **
 [url-help-target_compile_options]: https://cmake.org/cmake/help/latest/command/target_compile_options.html#target-compile-options
 [url-help-target_link_options]: https://cmake.org/cmake/help/latest/command/target_link_options.html#target-link-options
 
-[url-wiki-ide-build-debug]: https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debuging-from-the-Embedded-Workbench
+[url-wiki-ide-build-debug]: https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debugging-from-the-Embedded-Workbench
