@@ -12,7 +12,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 | __Product__            | __Evaluation__                                 | __IAR Customers (login required)__                |
 | -                      | -                                              | -                                                 |
 | IAR Build Tools        | [Contact us](https://iar.com/about/contact) | [for Arm](https://updates.iar.com/?product=BXARM) (or for others[^2]) |
-| IAR Embedded Workbench | [Download](https://iar.com/downloads)          | [for Arm](https://updates.iar.com/?product=EWARM) (or for others[^2]) |
+| IAR Embedded Workbench | [Download](https://www.iar.com/products/free-trials/)          | [for Arm](https://updates.iar.com/?product=EWARM) (or for others[^2]) |
      
 2) Download and install [CMake](https://github.com/Kitware/CMake/releases/latest).
 
