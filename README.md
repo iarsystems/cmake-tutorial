@@ -137,6 +137,9 @@ ctest
 ## Summary
 This tutorial covered the basics on using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for additional tips & tricks!
 
+[__` Follow us `__](https://github.com/iarsystems) on GitHub to get updates about tutorials like this and more.
+
+
 ## Issues
 For reporting CMake software defects use the [CMake Issue Tracker](https://gitlab.kitware.com/cmake/cmake/-/issues/).
 
