@@ -138,22 +138,19 @@ ctest
 This tutorial covered the basics on using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for additional tips & tricks!
 
 ## Issues
-Use the [CMake Issue Tracker](https://gitlab.kitware.com/cmake/cmake/-/issues/) to report CMake-related software defects.
+For reporting CMake software defects use the [CMake Issue Tracker](https://gitlab.kitware.com/cmake/cmake/-/issues/).
 
-For questions/suggestions specifically related to this tutorial:
-- Try the [wiki][url-repo-wiki].
-- Check for [earlier issues][url-repo-issue-old] in the issue tracker.
-- If nothing helps, create a [new issue][url-repo-issue-new], describing in detail.
+For technical support contact [IAR Customer Support][url-iar-customer-support].
 
-Do not use the issue tracker if you need technical support. The issue tracker **is not a support forum**:
-- If you run into license issues, refer to [IAR Customer Care](https://iar.com/knowledge/support/licensing-faq/).
-- If you run into tools issues, contact [IAR Tech Support](https://iar.com/knowledge/support/request-technical-support/).
+For questions related to this tutorial: try the [wiki][url-repo-wiki] or check [earlier issues][url-repo-issue-old]. If those don't help, create a [new issue][url-repo-issue-new] with detailed information.
 
 [^1]: For more information, see the "Installation and Licensing" guide for your product. If you do not have a license, [contact us](https://iar.com/about/contact).
 [^2]: CMake has built-in IAR C/C++ Compiler support for the following non-Arm architectures: 8051, AVR, MSP430, RH850, RISC-V, RL78, RX, STM8 and V850.
 [^3]: For interactively debugging of executable files (`*.elf`) using the C-SPY Debugger from the IAR Embedded Workbench IDE, read [this wiki article][url-wiki-ide-build-debug].
 
 <!-- links -->
+[url-iar-customer-support]: https://iar.my.site.com/mypages/s/contactsupport
+
 [url-repo-wiki]: https://github.com/IARSystems/cmake-tutorial/wiki
 [url-repo-issue-new]: https://github.com/IARSystems/cmake-tutorial/issues/new
 [url-repo-issue-old]: https://github.com/IARSystems/cmake-tutorial/issues?q=is%3Aissue+is%3Aopen%7Cclosed
