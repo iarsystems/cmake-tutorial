@@ -2,31 +2,16 @@ cmake_minimum_required(VERSION 3.20)
 
 project(Libs LANGUAGES C)
 
-add_executable(libs)
+set(CMAKE_STATIC_LIBRARY_SUFFIX ".a" CACHE STRING "" FORCE)
 
-target_sources(libs PRIVATE main.c)
+add_library(my_crc_lib)
 
-# TODO 4: Add the `lib` subdirectory (contains the `lib` target)
-add_subdirectory()
+target_sources(my_crc_lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/my_crc.c)
+target_include_directories(my_crc_lib AFTER PUBLIC ${CMAKE_SOURCE_DIR}/inc)
+target_compile_options(my_crc_lib PUBLIC --no_fragments)
 
-# TODO 5: Link the `lib` against `libs`
-target_link_libraries()
+add_subdirectory(lib)
 
-target_link_options(libs PRIVATE --semihosting)
+target_link_libraries(my_crc_lib lib)
 
-enable_testing()
-
-add_test(NAME libs-test
-         COMMAND /opt/iarsystems/bxarm/common/bin/CSpyBat
-         # C-SPY drivers for the Arm simulator via command line interface
-         /opt/iarsystems/bxarm/arm/bin/libarmPROC.so
-         /opt/iarsystems/bxarm/arm/bin/libarmSIM2.so
-         --plugin=/opt/iarsystems/bxarm/arm/bin/libarmLibsupportUniversal.so
-         # The target executable (built with debug information)
-         --debug_file=$<TARGET_FILE:libs>
-         # C-SPY driver options
-         --backend
-           --cpu=cortex-m4
-           --semihosting)
-
-set_tests_properties(libs-test PROPERTIES PASS_REGULAR_EXPRESSION "2843410253")
+target_link_options(my_crc_lib PRIVATE --semihosting)
