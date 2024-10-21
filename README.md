@@ -97,7 +97,7 @@ cmake --build .
 ## Run
 Let's test the application. To run the executable you will need the non-interactive[^3] command line interface for the IAR C-SPY Debugger (`cspybat`) with the proper drivers for the desired target. Amongst the many ways of accomplishing this, let's take advantage of the `add_test()` for testing the application in a Arm Cortex-M4 simulated target.
 
- In this example we will use Arm. To do so, you need to change the Tutorial's `CMakeLists.txt`:
+This section is interactive. In this example we will use Arm. So, you will need to update your Tutorial's `CMakeLists.txt`:
 - Firstly add [`enable_testing()`](https://cmake.org/cmake/help/latest/command/enable_testing.html#command:enable_testing) to enable testing:
 ```cmake
 enable_testing()
@@ -135,7 +135,7 @@ ctest
 ```
 
 ## Summary
-This tutorial covered the basics on using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for additional tips & tricks!
+This tutorial covered the basics on using CMake with the IAR tools from the command line. Proceed to the [wiki](https://github.com/IARSystems/cmake-tutorial/wiki) for additional interactive examples, tips & tricks!
 
 [__` Follow us `__](https://github.com/iarsystems) on GitHub to get updates about tutorials like this and more.
 
