@@ -6,3 +6,5 @@ target_sources()
 
 # TODO 3: Using the `PUBLIC` scope, expose the `lib` headers (inc) to other targets
 target_include_directories()
+
+target_compile_options(lib PRIVATE --cpu=cortex-m4)

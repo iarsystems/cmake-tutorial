@@ -13,7 +13,11 @@ configure_file()
 # TODO 3: Add the Project Binary Directory to the target's include directories
 target_include_directories()
 
-target_link_options(version PRIVATE --semihosting)
+target_compile_options(version PRIVATE --cpu=cortex-m4)
+
+target_link_options(version PRIVATE 
+  --cpu=cortex-m4
+  --semihosting)
 
 enable_testing()
 
