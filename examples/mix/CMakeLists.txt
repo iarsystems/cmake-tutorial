@@ -8,7 +8,11 @@ add_executable(mix)
 # TODO 2: Add `fun.s` source to the `mix` target
 target_sources(mix PRIVATE main.c)
 
-target_link_options(mix PRIVATE --semihosting)
+target_compile_options(mix PRIVATE --cpu=cortex-m4)
+
+target_link_options(mix PRIVATE
+  --cpu=cortex-m4
+  --semihosting)
 
 enable_testing()
 

@@ -50,7 +50,9 @@ target_sources(tutorial PRIVATE tutorial.c)
 target_compile_options(tutorial PRIVATE --cpu=cortex-m4)
 
 # linker options
-target_link_options(tutorial PRIVATE --semihosting)
+target_link_options(tutorial PRIVATE
+  --cpu=cortex-m4
+  --semihosting)
 ```
 
 ### Enabling the IAR Compiler

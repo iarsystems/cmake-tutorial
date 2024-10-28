@@ -12,7 +12,11 @@ add_subdirectory()
 # TODO 5: Link the `lib` against `libs`
 target_link_libraries()
 
-target_link_options(libs PRIVATE --semihosting)
+target_compile_options(libs PRIVATE --cpu=cortex-m4)
+
+target_link_options(libs PRIVATE
+  --cpu=cortex-m4
+  --semihosting)
 
 enable_testing()
 
