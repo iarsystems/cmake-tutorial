@@ -128,7 +128,7 @@ add_test(NAME tutorialTest
 set_tests_properties(tutorialTest PROPERTIES PASS_REGULAR_EXPRESSION "Hello world!")
 ```
 
-- Since `CMakeLists.txt` was modified, the build system needs to be reconfigured:
+- Since `CMakeLists.txt` was modified, the build system needs to be reconfigured. Rebuilding the project will automatically force reconfiguration, creating the `CTestTestfile.cmake` file:
 ```
 cmake --build .
 ```
