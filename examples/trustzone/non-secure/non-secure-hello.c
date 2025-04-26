@@ -44,7 +44,7 @@ void main_ns(void)
   /* Nothing more to do at this point... */
 }
 
-/* Inteface towards the secure part */
+/* Interface towards the secure part */
 #pragma location=NON_SECURE_ENTRY_TABLE
 __root const non_secure_init_t init_table = 
 { 

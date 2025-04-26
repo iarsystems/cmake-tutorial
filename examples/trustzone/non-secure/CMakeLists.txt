@@ -15,6 +15,6 @@ target_link_options(non-secure PRIVATE
   --cpu=$<TARGET_PROPERTY:secure,CPU>
   --config ${CMAKE_CURRENT_SOURCE_DIR}/v2m-mps2_ns.icf
   --semihosting
-  # TODO 5: Link agains the import library generated from the `secure` target
+  # TODO 5: Link against the import library generated from the `secure` target
   # TODO 6: Specify "no entry point" for the `non-secure` target
 )
