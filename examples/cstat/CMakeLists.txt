@@ -1,4 +1,4 @@
-# Minimum CMake version is cmake-4.0.20250409-gf3b0a80
+# Minimum CMake version is cmake-4.0.20250425-gd948dd6
 cmake_minimum_required(VERSION 4.0)
 
 set(This cstat_demo)
