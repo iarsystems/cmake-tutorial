@@ -68,7 +68,7 @@ CMake uses the host platform's default compiler. When cross-compiling embedded a
 
 During the configuration phase, CMake reads these variables from:
 - a separate file called "toolchain file" that you invoke `cmake` with `--toolchain /path/to/<filename>.cmake` (see provided example files [cxarm.cmake](tutorial/cxarm.cmake), [bxarm.cmake](tutorial/bxarm.cmake) and [ewarm.cmake](tutorial/ewarm.cmake)) -or-
-- the [`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/variable/CMAKE_TOOLCHAIN_FILE.html) variable, when you invoke `cmake` with `-DCMAKE_TOOLCHAIN_FILE=/path/to/<filename>.cmake` (useful CMake < 3.21) -or-
+- the [`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/variable/CMAKE_TOOLCHAIN_FILE.html) variable, when you invoke `cmake` with `-DCMAKE_TOOLCHAIN_FILE=/path/to/<filename>.cmake` (useful for CMake < 3.21) -or-
 - invoking `cmake` with `-DCMAKE_<lang>_COMPILER=/path/to/icc<target>` -or-
 - the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler -or-
 - the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects (See [this article](https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debugging-from-the-Embedded-Workbench) for details).
