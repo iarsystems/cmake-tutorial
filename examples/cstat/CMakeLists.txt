@@ -5,16 +5,14 @@ set(This cstat_demo)
 
 project(${This} C)
 
-# TODO 1: Get the compiler path
+
+# TODO 1: Enable C-STAT Static Analysis
 
 
-# TODO 2: Enable C-STAT Static Analysis
+# TODO 2: Select the CERT C ruleset
 
 
-# TODO 3: Select the CERT C ruleset
-
-
-# TODO 4: Select the MISRA C:2012 ruleset
+# TODO 3: Select the MISRA C:2012 ruleset
 
 
 add_executable(${This})
@@ -34,5 +32,5 @@ target_link_options(${This} PRIVATE
   --map .
 )
 
-# TODO 5: Perform link-time analysis when using the MISRA C:2012 ruleset
+# TODO 4: Perform link-time analysis when using the MISRA C:2012 ruleset
 
