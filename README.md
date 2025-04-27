@@ -9,11 +9,11 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 1) Download, install and activate[^1] your IAR product
 
-| Product                  | Evaluation                                                                     | IAR Subscribers (login required)
+| Product                  | For Evaluation                                                                 | For IAR Subscribers
 | -                        | -                                                                              | -
-| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=CXARM) (or for others[^2])
-| IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=BXARM) (or for others[^2])
-| IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | [for Arm](https://updates.iar.com/?product=EWARM) (or for others[^2])
+| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=CXARM)
+| IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=BXARM)[^2] (or for others[^3])
+| IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | [for Arm](https://updates.iar.com/?product=EWARM)[^2] (or for others[^3])
      
 2) Download and install [CMake](https://github.com/Kitware/CMake/releases/latest).
 
@@ -98,7 +98,7 @@ cmake --build .
 ```
 
 ## Run
-Let's test the application. To run the executable you will need the non-interactive[^3] command line interface for the IAR C-SPY Debugger (`cspybat`) with the proper drivers for the desired target. Amongst the many ways of accomplishing this, let's take advantage of the `add_test()` for testing the application in a Arm Cortex-M4 simulated target.
+Let's test the application. To run the executable you will need the non-interactive[^4] command line interface for the IAR C-SPY Debugger (`cspybat`) with the proper drivers for the desired target. Amongst the many ways of accomplishing this, let's take advantage of the `add_test()` for testing the application in a Arm Cortex-M4 simulated target.
 
 This section is interactive. In this example we will use Arm. So, you will need to update your Tutorial's `CMakeLists.txt`:
 - Firstly add [`enable_testing()`](https://cmake.org/cmake/help/latest/command/enable_testing.html) to enable testing:
@@ -153,8 +153,10 @@ For technical support contact [IAR Customer Support][url-iar-customer-support].
 For questions related to this tutorial: try the [wiki][url-repo-wiki] or check [earlier issues][url-repo-issue-old]. If those don't help, create a [new issue][url-repo-issue-new] with detailed information.
 
 [^1]: For more information, see the "Installation and Licensing" guide for your product. If you are not a subscriber yet, [contact us](https://iar.com/about/contact).
-[^2]: CMake has built-in IAR C/C++ Compiler support for the following non-Arm architectures: 8051, AVR, MSP430, RH850, RISC-V, RL78, RX, STM8 and V850.
-[^3]: For interactively debugging of executable files (`*.elf`) using the C-SPY Debugger from the IAR Embedded Workbench IDE, read [this wiki article][url-wiki-ide-build-debug].
+[^2]: For downloading the installers, IAR Subscribers must first perform login on [IAR MyPages](https://mypages.iar.com/s/login).
+[^3]: CMake has built-in IAR C/C++ Compiler support for the following non-Arm architectures: 8051, AVR, MSP430, RH850, RISC-V, RL78, RX, STM8 and V850.
+[^4]: For interactively debugging of executable files (`*.elf`) using the C-SPY Debugger from the IAR Embedded Workbench IDE, read [this wiki article][url-wiki-ide-build-debug].
+
 
 <!-- links -->
 [url-iar-customer-support]: https://iar.my.site.com/mypages/s/contactsupport
