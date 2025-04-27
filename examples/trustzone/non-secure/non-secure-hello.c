@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2018-2024, IAR Systems AB.
+  Copyright (c) 2018-2025, IAR Systems AB.
  
   `non-secure` "Hello" - A simple CMSE example
   This example is not production-ready within CMSE best-practices.

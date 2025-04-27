@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2018-2024, IAR Systems AB.
+  Copyright (c) 2018-2025, IAR Systems AB.
 
   Header file for the `trustzone` example.
     Contains definitions used in the following targets:
