@@ -15,9 +15,8 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v4
     - name: CMake - Configure
+      working-directory: tutorial
       run: cmake -GNinja -Bbuild
     - name: CMake - Build
+      working-directory: tutorial
       run: cmake --build build --verbose
-
-
-    
