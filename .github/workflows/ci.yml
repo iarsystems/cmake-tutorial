@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+  - cron: '20 16 * * *'
+
+jobs:
+  tutorial:
+    name: Build tutorial
+    runs-on: ubuntu-24.04
+    container: ghcr.io/iarsystems/arm
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+    - name: CMake - Configure
+      run: cmake -GNinja -Bbuild
+    - name: CMake - Build
+      run: cmake --build build --verbose
+
+
+    
