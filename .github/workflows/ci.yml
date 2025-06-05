@@ -16,7 +16,7 @@ jobs:
   tutorial:
     name: Build tutorial
     runs-on: ubuntu-24.04
-    container: ghcr.io/iarsystems/arm
+    container: ghcr.io/iarsystems/arm:9.60.4
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
