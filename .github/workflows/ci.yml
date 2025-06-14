@@ -43,5 +43,5 @@ jobs:
     - name: Upload SARIF
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: build/tutorial.c.sarif
+        sarif_file: tutorial/build/tutorial.c.sarif
         category: cstat-analysis
