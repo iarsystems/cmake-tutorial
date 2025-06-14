@@ -1,0 +1,41 @@
+name: Code Analysis
+
+on:
+  push:
+    paths-ignore: 
+    - 'README.md'
+  workflow_dispatch:
+  schedule:
+  - cron: '30 16 * * *'
+
+# Set a new GitHub Actions Secret named IAR_LMS_BEARER_TOKEN
+# for your repository. The secret is then propagated to an
+# Environment variable used for all jobs within this workflow
+env:
+  IAR_LMS_BEARER_TOKEN: ${{ secrets.IAR_LMS_BEARER_TOKEN }}
+
+jobs:
+  tutorial:
+    name: Analyze tutorial
+    runs-on: ubuntu-24.04
+    container: ghcr.io/iarsystems/arm
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+      packages: read
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+
+    - name: IAR C-STAT Static Analysis
+      working-directory: tutorial
+      run: |
+        ichecks --all --output checks.manifest
+        icstat --checks checks.manifest --db cstat.db --sarif_dir . analyze -- iccarm tutorial.c
+    
+    - name: Upload SARIF
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: tutorial/tutorial.c.sarif
+        category: cstat-analysis
