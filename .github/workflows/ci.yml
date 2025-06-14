@@ -20,9 +20,23 @@ jobs:
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
+
     - name: CMake - Configure
       working-directory: tutorial
       run: cmake -GNinja -Bbuild
+
     - name: CMake - Build
       working-directory: tutorial
       run: cmake --build build --verbose
+
+    - name: IAR C-STAT Static Analysis
+      working-directory: tutorial
+      run: |
+        ichecks --all --output build/checks.manifest
+        icstat --checks build/checks.manifest --db build/cstat.db --sarif_dir build -- iccarm tutorial.c
+    
+    - name: Upload SARIF
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: build/tutorial.c.sarif
+        category: cstat-analysis
