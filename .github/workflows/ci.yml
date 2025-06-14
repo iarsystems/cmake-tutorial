@@ -17,6 +17,11 @@ jobs:
     name: Build tutorial
     runs-on: ubuntu-24.04
     container: ghcr.io/iarsystems/arm
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+      packages: read
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
