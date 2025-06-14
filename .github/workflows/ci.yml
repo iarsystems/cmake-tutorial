@@ -33,7 +33,7 @@ jobs:
       working-directory: tutorial
       run: |
         ichecks --all --output build/checks.manifest
-        icstat --checks build/checks.manifest --db build/cstat.db --sarif_dir build -- iccarm tutorial.c
+        icstat --checks build/checks.manifest --db build/cstat.db --sarif_dir build analyze -- iccarm tutorial.c
     
     - name: Upload SARIF
       uses: github/codeql-action/upload-sarif@v3
