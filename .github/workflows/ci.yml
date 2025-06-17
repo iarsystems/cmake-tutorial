@@ -14,6 +14,10 @@ on:
 env:
   IAR_LMS_BEARER_TOKEN: ${{ secrets.IAR_LMS_BEARER_TOKEN }}
 
+# Set default permissions for the workflow jobs
+permissions:
+  contents: read
+
 jobs:
   tutorial:
     name: Build tutorial
