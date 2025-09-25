@@ -11,7 +11,9 @@ add_executable(tutorial)
 target_sources(tutorial PRIVATE tutorial.c)
 
 # compiler options
-target_compile_options(tutorial PRIVATE --cpu=cortex-m4)
+target_compile_options(tutorial PRIVATE
+  --dlib_config full
+  --cpu=cortex-m4)
 
 # linker options
 target_link_options(tutorial PRIVATE
