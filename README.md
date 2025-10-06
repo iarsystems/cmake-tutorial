@@ -6,9 +6,6 @@ CMake is an open-source, cross-platform family of tools maintained and supported
 
 This tutorial offers a short introduction for those seeking information on how to start using the IAR C/C++ Compiler together with CMake from the command line. While this guide is based on the IAR Build Tools for Arm (CXARM) 9.60.4 on Linux, it should work with other supported IAR products with no or minimal changes.
 
->[!CAUTION]
->An extraneous regression that affects `ASM` settings persistence for when __reconfiguring__ a project was introduced in CMake 4.1.0. A fix is planned for CMake [4.1.2](https://gitlab.kitware.com/cmake/cmake/-/merge_requests/11160).
-
 ## Prerequisites
 Before you begin, you will need to download and install the IAR product, CMake and then clone this repository.
 
