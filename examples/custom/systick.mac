@@ -1,0 +1,17 @@
+/**************************************************
+ *
+ * Copyright (c) 2025 IAR Systems AB.
+ *
+ * See LICENSE for detailed license information.
+ *
+ **************************************************/
+
+__var _SysTick_Interrupt;
+
+execUserSetup() {
+  _SysTick_Interrupt = __orderInterrupt("SysTick", 0, 10000, 0, 0, 0, 100);
+}
+
+execUserExit() {
+  __cancelInterrupt( _SysTick_Interrupt );
+}
