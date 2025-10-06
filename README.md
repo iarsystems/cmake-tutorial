@@ -4,7 +4,12 @@
 
 CMake is an open-source, cross-platform family of tools maintained and supported by Kitware. Among its many features, it essentially provides [Makefile Generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#id11) and [Ninja Generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#id12) which compose scripts for cross-compiling C/C++ embedded software projects based on one or more `CMakeLists.txt` configuration files.
 
-This tutorial offers a short introduction for those seeking information on how to start using the IAR C/C++ Compiler together with CMake from the command line. While this guide is based on the IAR Build Tools for Arm (CXARM) 9.60.4 on Linux, it should work with other supported IAR products with no or minimal changes.
+This tutorial offers a short introduction for those seeking information on how to start using the IAR C/C++ Compiler together with CMake from the command line. For diving deeper, consider visiting the [__cmake-tutorial wiki__](https://github.com/iarsystems/cmake-tutorial/wiki).
+
+>[!NOTE]
+>While this guide is based on the IAR Build Tools for Arm (CXARM) 9.60.4 on Linux, it should work with other supported IAR products with no or minimal changes.
+
+
 
 ## Prerequisites
 Before you begin, you will need to download and install the IAR product, CMake and then clone this repository.
