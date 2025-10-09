@@ -14,9 +14,9 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 | Product                  | For Evaluation                                                                 | For IAR Subscribers
 | -                        | -                                                                              | -
-| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=CXARM)
-| IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | [for Arm](https://updates.iar.com/?product=BXARM)[^2] (or for others[^3])
-| IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | [for Arm](https://updates.iar.com/?product=EWARM)[^2] (or for others[^3])
+| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=CXARM)<br>for [RISC-V](https://updates.iar.com/?product=CXRISCV)<br>for [Renesas RL78](https://updates.iar.com/?product=CXRL78)<br>for [Renesas RX](https://updates.iar.com/?product=CXRX)<br>
+| IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=BXARM)[^2] (or for others[^3])
+| IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | for [Arm](https://updates.iar.com/?product=EWARM)[^2] (or for others[^3])
      
 2) Download and install [CMake](https://github.com/Kitware/CMake/releases/latest).
 
@@ -24,7 +24,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 ## Building a Basic CMake Project
 >[!NOTE]
->While this guide is based on the IAR Build Tools for Arm (CXARM) 9.60.4 on Linux, it should work with other supported IAR products with no or minimal changes.
+>While this guide is based on the IAR Build Tools for Arm (CXARM) 9.70.1 on Linux, it should work with other supported IAR products with no or minimal changes.
 
 The most basic CMake project is an executable built from a single source code file. For simple projects like this, a `CMakeLists.txt` file with about half dozen of commands is all that is required.
 
@@ -84,9 +84,18 @@ During the configuration phase, CMake reads these variables from:
 ### Configure and Build
 We are ready to build our first project! Run CMake to configure the project and then build it with your chosen build tool.
 
-- Before starting to use CMake, make sure your compiler is working properly. Example (for Arm):
-```
-/path/to/iccarm --version
+- Before starting to use CMake, make sure your compiler is working properly. Below you will find an oneliner that will try to compile a simple module:
+```console
+$ echo "main(){}" | /opt/iar/cxarm/arm/bin/iccarm --output $(mktemp) -
+
+   IAR ANSI C/C++ Compiler V9.70.1.475/LNX for ARM
+   Copyright 1999-2025 IAR Systems AB.
+   LMS Cloud License (LMSC 1.5.0)
+ 
+ 4 bytes of CODE memory
+
+Errors: none
+Warnings: none
 ```
 
 - From the terminal, navigate to the [tutorial](tutorial) directory and create a build directory:
