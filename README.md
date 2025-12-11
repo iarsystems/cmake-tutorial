@@ -24,7 +24,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 ## Building a Basic CMake Project
 >[!NOTE]
->While this guide is based on the IAR Build Tools for Arm (CXARM) 9.70.1 on Linux, it should work with other supported IAR products with no or minimal changes.
+>While this guide is based on the IAR Build Tools for Arm (CXARM) 9.70.2 on Linux, it should work with other supported IAR products with no or minimal changes.
 
 The most basic CMake project is an executable built from a single source code file. For simple projects like this, a `CMakeLists.txt` file with about half dozen of commands is all that is required.
 
@@ -88,14 +88,15 @@ We are ready to build our first project! Run CMake to configure the project and 
 ```console
 $ echo "main(){}" | /opt/iar/cxarm/arm/bin/iccarm --output $(mktemp) -
 
-   IAR ANSI C/C++ Compiler V9.70.1.475/LNX for ARM
+   IAR ANSI C/C++ Compiler V9.70.2.500/LNX for ARM
    Copyright 1999-2025 IAR Systems AB.
-   LMS Cloud License (LMSC 1.5.0)
+   LMS Cloud License (LMSC 2.1.1)
  
  4 bytes of CODE memory
 
 Errors: none
 Warnings: none
+
 ```
 
 - From the terminal, navigate to the [tutorial](tutorial) directory and create a build directory:
@@ -128,8 +129,8 @@ enable_testing()
 add_test(NAME tutorialTest
          COMMAND /opt/iar/cxarm/common/bin/CSpyBat
          # C-SPY drivers for the Arm simulator via command line interface
-         /opt/iar/cxarm/arm/bin/libarmPROC.so
-         /opt/iar/cxarm/arm/bin/libarmSIM2.so
+         /opt/iar/cxarm/arm/bin/libarmproc.so
+         /opt/iar/cxarm/arm/bin/libarmsim2.so
          --plugin=/opt/iar/cxarm/arm/bin/libarmLibsupportUniversal.so
          # The target executable (built with debug information)
          --debug_file=$<TARGET_FILE:tutorial>

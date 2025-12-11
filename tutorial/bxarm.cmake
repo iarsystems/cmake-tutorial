@@ -1,4 +1,4 @@
-# Toolchain File for the IAR C/C++ Compiler
+# Toolchain File for the IAR C/C++ Compiler (BX)
 
 # Set CMake for cross-compiling
 set(CMAKE_SYSTEM_NAME Generic)
