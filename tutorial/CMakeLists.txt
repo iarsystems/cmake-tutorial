@@ -12,7 +12,7 @@ target_sources(tutorial PRIVATE tutorial.c)
 
 # compiler options
 target_compile_options(tutorial PRIVATE
-  --dlib_config full
+  --dlib_config=full
   --cpu=cortex-m4)
 
 # linker options
