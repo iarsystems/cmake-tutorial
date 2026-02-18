@@ -14,7 +14,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 | Product                  | For Evaluation                                                                 | For IAR Subscribers
 | -                        | -                                                                              | -
-| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=CXARM)<br>for [RISC-V](https://updates.iar.com/?product=CXRISCV)<br>for [Renesas RL78](https://updates.iar.com/?product=CXRL78)<br>for [Renesas RX](https://updates.iar.com/?product=CXRX)<br>
+| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=CXARM)<br>for [RISC-V](https://updates.iar.com/?product=CXRISCV)<br>for [Renesas RH850](https://updates.iar.com/?product=CXRH850)<br>for [Renesas RL78](https://updates.iar.com/?product=CXRL78)<br>for [Renesas RX](https://updates.iar.com/?product=CXRX)<br>
 | IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=BXARM)[^2] (or for others[^3])
 | IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | for [Arm](https://updates.iar.com/?product=EWARM)[^2] (or for others[^3])
      
