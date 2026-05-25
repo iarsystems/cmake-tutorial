@@ -126,12 +126,17 @@ enable_testing()
 
 - Then use [`add_test()`](https://cmake.org/cmake/help/latest/command/add_test.html) to encapsulate the command line `cspybat` needs. In the example below, the parameters are adjusted for simulating a generic Arm Cortex-M4 target environment:
 ```cmake
+# Infers additional information from CMAKE_C_COMPILER
+cmake_path(GET CMAKE_C_COMPILER PARENT_PATH BIN_DIR)
+cmake_path(GET BIN_DIR PARENT_PATH TOOLKIT_DIR)
+cmake_path(GET TOOLKIT_DIR FILENAME TOOLKIT)
+
 add_test(NAME tutorialTest
-         COMMAND /opt/iar/cxarm/common/bin/CSpyBat
+         COMMAND ${BIN_DIR}/../../common/bin/CSpyBat
          # C-SPY drivers for the Arm simulator via command line interface
-         /opt/iar/cxarm/arm/bin/libarmproc.so
-         /opt/iar/cxarm/arm/bin/libarmsim2.so
-         --plugin=/opt/iar/cxarm/arm/bin/libarmLibsupportUniversal.so
+         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}PROC{CMAKE_SHARED_LIBRARY_SUFFIX}
+         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}SIM2${CMAKE_SHARED_LIBRARY_SUFFIX}
+         --plugin=${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}LibsupportUniversal${CMAKE_SHARED_LIBRARY_SUFFIX}
          # The target executable (built with debug information)
          --debug_file=$<TARGET_FILE:tutorial>
          # C-SPY driver options

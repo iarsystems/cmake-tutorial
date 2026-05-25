@@ -7,4 +7,5 @@ target_sources()
 # TODO 3: Using the `PUBLIC` scope, expose the `lib` headers (inc) to other targets
 target_include_directories()
 
-target_compile_options(lib PRIVATE --cpu=cortex-m4)
+# Any target linking against the library will inherit its PUBLIC compiler settings
+target_compile_options(lib PUBLIC --cpu=cortex-m4)
