@@ -12,20 +12,21 @@ add_subdirectory()
 # TODO 5: Link the `lib` against `libs`
 target_link_libraries()
 
-target_compile_options(libs PRIVATE --cpu=cortex-m4)
-
 target_link_options(libs PRIVATE
   --cpu=cortex-m4
   --semihosting)
 
 enable_testing()
 
+cmake_path(GET CMAKE_C_COMPILER PARENT_PATH BIN_DIR)
+cmake_path(GET BIN_DIR PARENT_PATH TOOLKIT_DIR)
+cmake_path(GET TOOLKIT_DIR FILENAME TOOLKIT)
 add_test(NAME libs-test
-         COMMAND /opt/iarsystems/bxarm/common/bin/CSpyBat
+         COMMAND ${BIN_DIR}/../../common/bin/CSpyBat
          # C-SPY drivers for the Arm simulator via command line interface
-         /opt/iarsystems/bxarm/arm/bin/libarmPROC.so
-         /opt/iarsystems/bxarm/arm/bin/libarmSIM2.so
-         --plugin=/opt/iarsystems/bxarm/arm/bin/libarmLibsupportUniversal.so
+         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}PROC${CMAKE_SHARED_LIBRARY_SUFFIX}
+         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}SIM2${CMAKE_SHARED_LIBRARY_SUFFIX}
+         --plugin=${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}LibsupportUniversal${CMAKE_SHARED_LIBRARY_SUFFIX}
          # The target executable (built with debug information)
          --debug_file=$<TARGET_FILE:libs>
          # C-SPY driver options

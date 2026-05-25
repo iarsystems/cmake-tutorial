@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 4.1.2)
 
-# TODO 1: Include CMake modules to the project
-
 project(custom)
+
+# TODO 1: Include CMake modules to the project
+list()
+include()
+include()
+
+# Enable IAR Language Extensions
+set(C_EXTENSIONS ON)
 
 # Add multiple executables
 add_executable(sqrt_test)
@@ -26,5 +32,5 @@ set_target_properties(
 )
 
 # Add simulated tests
-iar_cspysim(sqrt_test)
-iar_cspysim(sqrtf_test)
+iar_cspysim(sqrt_test "ticks:")
+iar_cspysim(sqrtf_test "ticks:")

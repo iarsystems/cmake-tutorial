@@ -1,9 +1,6 @@
 include_guard()
 
 # Enable all CMake default build configurations
-list(APPEND CMAKE_CONFIGURATION_TYPES Debug)
-list(APPEND CMAKE_CONFIGURATION_TYPES Release)
-list(APPEND CMAKE_CONFIGURATION_TYPES RelWithDebInfo)
 list(APPEND CMAKE_CONFIGURATION_TYPES MinSizeRel)
 
 # Add IAR C/C++ Compiler custom configuration for High Speed
