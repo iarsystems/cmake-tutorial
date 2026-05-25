@@ -134,7 +134,7 @@ cmake_path(GET TOOLKIT_DIR FILENAME TOOLKIT)
 add_test(NAME tutorialTest
          COMMAND ${BIN_DIR}/../../common/bin/CSpyBat
          # C-SPY drivers for the Arm simulator via command line interface
-         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}PROC{CMAKE_SHARED_LIBRARY_SUFFIX}
+         ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}PROC${CMAKE_SHARED_LIBRARY_SUFFIX}
          ${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}SIM2${CMAKE_SHARED_LIBRARY_SUFFIX}
          --plugin=${BIN_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${TOOLKIT}LibsupportUniversal${CMAKE_SHARED_LIBRARY_SUFFIX}
          # The target executable (built with debug information)
