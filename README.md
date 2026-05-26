@@ -145,7 +145,7 @@ add_test(NAME tutorialTest
            --semihosting)
 ```
 >[!TIP]
->- Read this [article](https://github.com/iarsystems/cmake-tutorial/wiki/CTest-with-IAR-Embedded-Workbench-for-Arm) for the specifics when driving tests from IAR Embedded Workbench for Arm.
+>- Read this [article](https://github.com/iarsystems/cmake-tutorial/wiki/CTest-with-IAR-C%E2%80%90SPY-Debugger-for-Arm) for the specifics when driving tests from IAR Embedded Workbench for Arm.
 
 - Now use the [`PASS_REGULAR_EXPRESSION`](https://cmake.org/cmake/help/latest/prop_test/PASS_REGULAR_EXPRESSION.html) test property to validate if the program emits the expected string to the standard output (`stdout`). In this case, verifying that `printf()` prints the expected message.
 ```cmake
