@@ -23,11 +23,13 @@ set_target_properties(app-cpp14 PROPERTIES
   CXX_STANDARD_REQUIRED OFF
   CXX_EXTENSIONS ON)
 
+
 add_executable(app-cpp11 main.cpp)
 set_target_properties(app-cpp11 PROPERTIES
   CXX_STANDARD 11
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS ON)
+
 
 add_executable(app-c17 main.c)
 set_target_properties(app-c17 PROPERTIES
@@ -51,6 +53,7 @@ set_target_properties(app-c99 PROPERTIES
 
 
 add_executable(app-c90 main.c)
+# TODO 2: Enable strict-conformance for the app-c90 application
 set_target_properties(app-c90 PROPERTIES
   C_STANDARD 90
   C_STANDARD_REQUIRED OFF
