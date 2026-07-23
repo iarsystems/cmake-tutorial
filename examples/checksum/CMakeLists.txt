@@ -22,15 +22,6 @@ target_link_options(checksum PRIVATE
 
 # TODO 1: Add a post build command for placing a checksum
 #         at the end of the application
-add_custom_target(checksummed ALL
-  DEPENDS checksum
-  COMMAND ${CMAKE_IAR_ELFTOOL} 
-    --silent
-    --fill="0xFF\;0x0000'0000-0x0007'FFFF"
-    --checksum="__checksum:4,crc32:Li,0xFFFFFFFF\;0x0000'0000-__checksum"
-    $<TARGET_FILE:checksum>
-    $<TARGET_FILE:checksum>
-)
 
 # Enable CTest
 enable_testing()
