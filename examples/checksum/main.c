@@ -18,12 +18,13 @@ void main()
   // Print out the checksum calculated by crc32()
   printf(" crc32() checksum: 0x%08X\n", crc);
 
-  // Validate the checksum before
+  // Validate the application integrity at initialization
   if (crc == __checksum)
   {
     printf("    Checksum-test: PASS");
   } else {
     printf("    Checksum-test: FAIL");
+
     // Add countermeasures for integrity failure
   }
 

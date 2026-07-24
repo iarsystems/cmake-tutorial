@@ -2,7 +2,7 @@
 
 #define CRC32_POLY 0x04C11DB7
 
-uint32_t crc32(uint32_t crc, uint32_t const* start_addr, uint32_t const* end_addr)
+uint32_t crc32(uint32_t crc, uint32_t const* start_addr, uint32_t const* checksum_addr)
 {
   const uint32_t crc32NibbleLUT[16] = {
     0x00000000,CRC32_POLY,0x09823B6E,0x0D4326D9,
@@ -10,7 +10,7 @@ uint32_t crc32(uint32_t crc, uint32_t const* start_addr, uint32_t const* end_add
     0x2608EDB8,0x22C9F00F,0x2F8AD6D6,0x2B4BCB61,
     0x350C9B64,0x31CD86D3,0x3C8EA00A,0x384FBDBD, };
 
-  for (const uint32_t* ptr = start_addr; ptr < end_addr; ptr++) {
+  for (const uint32_t* ptr = start_addr; ptr < checksum_addr; ptr++) {
     crc = crc ^ *ptr;
     /* 8 rounds * 4-bit(nibble) = 32 bit(word) */
     crc = (crc << 4) ^ crc32NibbleLUT[crc >> 28];
