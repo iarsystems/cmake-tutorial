@@ -3,12 +3,13 @@ add_executable(secure)
 target_sources(secure PRIVATE secure-hello.c)
 
 set_target_properties(secure PROPERTIES
-  CPU    cortex-m33
+  CPU cortex-m33
 )
 
 target_compile_options(secure PRIVATE
   --cpu=$<TARGET_PROPERTY:CPU> 
-# TODO 2: Enable the CMSE in the compiler flags
+  # TODO 1: Enable the CMSE in the compiler flags
+
 )
 
 target_include_directories(secure PUBLIC
@@ -19,5 +20,20 @@ target_link_options(secure PRIVATE
   --semihosting
   --cpu=$<TARGET_PROPERTY:CPU>
   --config ${CMAKE_CURRENT_SOURCE_DIR}/v2m-mps2_s.icf
-# TODO 3: Set the linker to produce an import library, consumed by the `non-secure` target
+  # TODO 2: Set the linker to produce an import library object file
+
 )
+
+# TODO 3: Add a custom target for explicitly marking the secure import library as `GENERATED`
+#         (required for Ninja targets)
+
+
+
+
+
+
+# TODO 4: Include the secure import library in the generator's clean target
+#         (clean with: cmake --build build --target clean)
+
+
+
