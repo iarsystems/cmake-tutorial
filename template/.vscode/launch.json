@@ -1,0 +1,80 @@
+// For details on each supported attribute, refer to the autocompletion
+// suggestions and tooltips provided by the IAR C-SPY Debug extension.
+
+// With the IAR C-SPY Debug extension you can enable flexible workflows
+// such as one to flash and launch the application in C-SPY, and another
+// to reattach to the running target as needed:
+//   "request": ":attach"
+//   "leaveTargetRunning": true
+
+// The driverOptions accepts an array with supported C-SPY command line
+// options. For the complete reference, refer to:
+// https://docs.iar.com/ewarm/10.1x/en/c-spy-debugging/the-c-spy-command-line-utility-cspybat.html
+{
+  "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "toolkitDir",
+      "type": "command",
+      "command": "cmake.cacheVariable",
+      "args": { "name": "TOOLKIT_DIR" }
+    }
+  ],
+  "configurations": [
+    {
+      "type": "cspy",
+      "name": "C-SPY: Simulator",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "workbenchPath": "${input:toolkitDir}/..",
+      "target": "arm",
+      "driver": "Simulator",
+      "driverOptions": [
+        "--cpu=Cortex-M4",
+        "--fpu=VFPv4_SP",
+        "--semihosting"
+      ],
+      "stopOnEntry": true
+    },
+    {
+      "type": "cspy",
+      "name": "C-SPY: I-jet",
+      "request": "launch", // "attach" also supported
+      "leaveTargetRunning": false, // use true when request: attach
+      "program": "${command:cmake.launchTargetPath}",
+      "workbenchPath": "${input:toolkitDir}/../",
+      "target": "arm",
+      "driver": "I-jet",
+      "driverOptions": [ // Match your Device/CPU/FPU/DDF
+        "--device=STM32F407VG",   
+        "--cpu=Cortex-M4",
+        "--fpu=VFPv4_SP",
+        "--semihosting",
+        "-p ${input:toolkitDir}/config/debugger/ST/STM32F407VG.ddf",
+        "--drv_interface=SWD",
+        "--jet_power_from_probe=switch_off"
+      ],
+      "stopOnEntry": true
+    },
+    {
+      "type": "cspy",
+      "name": "C-SPY: J-Link",
+      "request": "launch", // "attach" also supported
+      "leaveTargetRunning": false, // use true when request: attach
+      "program": "${command:cmake.launchTargetPath}",
+      "workbenchPath": "${input:toolkitDir}/../",
+      "target": "arm",
+      "driver": "J-Link/J-Trace",
+      "driverOptions": [ // Match your Device/CPU/FPU/DDF
+        "--device=STM32F407VG", 
+        "--cpu=Cortex-M4",
+        "--fpu=VFPv4_SP",
+        "--semihosting",
+        "-p ${input:toolkitDir}/config/debugger/ST/STM32F407VG.ddf",
+        "--drv_interface=SWD",
+        "--drv_communication=USB0"
+      ],
+      "stopOnEntry": true
+    }
+  ]
+}

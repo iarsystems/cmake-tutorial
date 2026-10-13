@@ -1,0 +1,73 @@
+{
+    /* CMake Tools settings */
+    "cmake.buildBeforeRun": true,
+    "cmake.configureOnOpen": true,
+    "cmake.useCMakePresets": "always",
+    "cmake.enabledOutputParsers": [ "cmake" ],
+    "cmake.defaultVariants": { "buildType": "Debug" },
+    "cmake.options.statusBarVisibility": "visible",
+    "cmake.options.advanced": {
+        "folder": {
+            "projectStatusVisibility": "visible"
+        },
+        "configure": {
+            "projectStatusVisibility": "visible",
+            "statusBarVisibility": "visible"
+        },
+        "build": {
+            "projectStatusVisibility": "visible",
+            "statusBarVisibility": "visible"
+        },
+        "buildTarget": {
+            "statusBarVisibility": "hidden"
+        },
+        "testPreset": {
+            "statusBarVisibility": "hidden"
+        },
+        "ctest": {
+            "projectStatusVisibility": "visible",
+            "statusBarVisibility": "visible"
+        },
+        "debug": {
+            "projectStatusVisibility": "hidden",
+            "statusBarVisibility": "hidden"
+        },
+        "launch": {
+            "projectStatusVisibility": "hidden",
+            "statusBarVisibility": "hidden"
+        },
+        "cpack": {
+            "projectStatusVisibility": "hidden",
+            "statusBarVisibility": "hidden"
+        },
+        "workflow": {
+            "projectStatusVisibility": "hidden",
+            "statusBarVisibility": "hidden"
+        },
+        "launchTarget": {
+            "statusBarVisibility": "hidden"
+        },
+        "packagePreset": {
+            "statusBarVisibility": "hidden"
+        },
+        "workflowPreset": {
+            "statusBarVisibility": "hidden"
+        }        
+    },
+
+    /* Clangd settings (update path as required) */
+    "clangd.path": "/opt/iar/cxarm/common/bin/clangd",
+    //"clangd.path": "/opt/iar/ewarmc/common/bin/clangd",
+    //"clangd.path": "/iar/cxarm-10.10.2/common/bin/clangd.exe",
+    //"clangd.path": "/iar/ewarmc-10.10.2/common/bin/clangd.exe",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--completion-style=bundled",
+        "--enable-config",
+        "--header-insertion=never",
+        "--ignore-diags-in-system-headers",
+        "--limit-references=100",
+        "--limit-results=100",
+        "--log=verbose"
+    ]
+}

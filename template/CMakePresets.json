@@ -1,0 +1,79 @@
+{
+    "version": 10,
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "cacheVariables": {
+              "CMAKE_SYSTEM_NAME": "Generic"
+            },
+            "generator": "Ninja Multi-Config",
+            "warnings": { "unusedCli": false }
+        },
+        {
+            "name": "iccarm",
+            "inherits": "base",
+            "displayName": "IAR Build Tools for Arm",
+            "toolchainFile": "${sourceDir}/iccarm.cmake",
+            "binaryDir": "${sourceDir}/build",
+            "description": "Configure CMake project."
+        }
+    ],
+    "buildPresets": [
+        {   "name": "debug",
+            "displayName": "Debug",
+            "description": "Low level optimizations - include debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "Debug"
+        },
+        {
+            "name": "coverage",
+            "displayName": "Coverage",
+            "description": "Disable optimizations - include debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "Coverage"
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Optimize for speed - exclude debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "Release"
+        },
+        {
+            "name": "relwithdebinfo",
+            "displayName": "RelWithDebInfo",
+            "description": "Optimize for speed - include debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "minsizerel",
+            "displayName": "MinSizeRel",
+            "description": "Optimize for smallest binary size - exclude debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "MinSizeRel"
+        },
+        {
+            "name": "medium",
+            "displayName": "Medium",
+            "description": "Optimize for medium execution speed - exclude debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "Medium"
+        },
+        {
+            "name": "highspeed",
+            "displayName": "HighSpeed",
+            "description": "Optimize for high execution speed - exclude debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "HighSpeed"
+        },
+        {
+            "name": "maxspeed",
+            "displayName": "MaxSpeed",
+            "description": "Optimize for maximum execution speed - exclude debug information.",
+            "configurePreset": "iccarm",
+            "configuration": "MaxSpeed"
+        }
+    ]
+}

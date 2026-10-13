@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    //"iarsystems.iar-extension-pack",
+    "iarsystems.iar-debug",
+    "iarsystems.iar-login",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "ms-vscode.cmake-tools",
+    "usernamehw.errorlens",
+  ]
+}   

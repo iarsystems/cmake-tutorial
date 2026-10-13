@@ -1,0 +1,143 @@
+# Example of a valid .clangd cofiguration file for IAR C/C++ Compiler v10.xx.x (Linux)
+#
+# c_macros.h is generated at CMake configure time
+# cxx_macros.h is generated at CMake configure time
+
+CompileFlags:
+  Remove:
+    - -e
+    - -O*
+    - --cpu=*
+    - --fpu=*
+    - --c++
+    - --libc++
+    - --silent
+    - --no_*
+    - --dlib_config*
+
+  Add:
+    - -undef
+    - -nostdinc
+    - -Wno-unaligned-access
+    - -fiar-compiler
+    - -ferror-limit=0
+    - -funsigned-char
+    - -fiar-extensions
+    - -isystem
+    - /opt/iar/cxarm/arm/inc/c/aarch32
+    - -isystem
+    - /opt/iar/cxarm/arm/inc
+    - -isystem
+    - /opt/iar/cxarm/arm/inc/c
+    - --target=armv7m-none-eabi
+    - -D__IAR_CLANGD__
+    - -D__ALIGNOF__=__alignof__
+    - -D__absolute=
+    - -D__arm=
+    - -D__assignment_by_bitwise_copy_allowed(Ty0)=1
+    - -D__c99_generic(...)=
+    - -D__code=
+    - -D__constrange(a,...)=
+    - -D__construction_by_bitwise_copy_allowed(Ty0)=1
+    - -D__data=
+    - -D__has_constructor=__is_trivially_constructible
+    - -D__has_destructor=__is_trivially_constructible
+    - -D__inited=
+    - -D__inline=
+    - -D__inline__=
+    - -D__interwork=
+    - -D__intrinsic=
+    - -D__monitor=
+    - -D__naked=
+    - -D__nested=
+    - -D__no_alloc=
+    - -D__no_alloc16=
+    - -D__no_init=
+    - -D__no_scratch=
+    - -D__noreturn=
+    - -D__nounwind=
+    - -D__out_of_image=
+    - -D__packed=
+    - -D__pcrel=
+    - -D__ramfunc=
+    - -D__ro_placement=
+    - -D__root=
+    - -D__section_begin(...)=((void *) 0)
+    - -D__section_end(...)=((void *) 0)
+    - -D__section_size(...)=0
+    - -D__segment_begin(...)=((void *) 0)
+    - -D__segment_end(...)=((void *) 0)
+    - -D__segment_size(...)=0
+    - -D__sfb(...)=((void *) 0)
+    - -D__sfe(...)=((void *) 0)
+    - -D__sfs(...)=0
+    - -D__spec_string=
+    - -D__stackless=
+    - -D__swi=
+    - -D__task=
+    - -D__thumb=
+    - -D__weak=
+    - -D__weak_test=
+    - -D__aeabi_memclr(Ty0, Ty1)=
+    - -D__aeabi_memcpy(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memmove(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memset(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memclr4(Ty0, Ty1)=
+    - -D__aeabi_memcpy4(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memmove4(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memset4(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memclr8(Ty0, Ty1)=
+    - -D__aeabi_memcpy8(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memmove8(Ty0, Ty1, Ty2)=
+    - -D__aeabi_memset8(Ty0, Ty1, Ty2)=
+    - -D__get_SP()=0
+    - -D__get_PC()=0
+    - -D__iar_atomic_init(Ty0, Ty1)=
+    - -D__iar_atomic_init(Ty0, Ty1, Ty2)=
+    - -D__iar_atomic_load(Ty0, Ty1)=0
+    - -D__iar_atomic_exchange(Ty0, Ty1, Ty2)=0
+    - -D__iar_atomic_compare_exchange_strong(Ty0, Ty1, Ty2, Ty3, Ty4)=0
+    - -D__iar_atomic_compare_exchange_weak(Ty0, Ty1, Ty2, Ty3, Ty4)=0
+    - -D__iar_atomic_fetch_add(...)=0
+    - -D__iar_atomic_fetch_sub(...)=0
+    - -D__iar_atomic_fetch_or(...)=0
+    - -D__iar_atomic_fetch_xor(...)=0
+    - -D__iar_atomic_fetch_and(...)=0
+    - -D__iar_bits2fp32(Ty0)=0.0f
+    - -D__iar_bits2fp64(Ty0)=0.0
+    - -D__iar_cast_to(Ty0)=
+    - -D__iar_fp2bits32(Ty0)=0
+    - -D__iar_fp2bits64(Ty0)=0
+    - -D__iar_fpgethi64(Ty0)=0
+    - -D__iar_fpsethi64(Ty0, Ty1)=0.0
+    - -D__iar_generic(...)=
+    - -D___iar_is_complete(...)=__is_complete_type
+    - -D__no_alloc_str(...)=((unsigned long)0)
+    - -D__no_alloc_str16(...)=((unsigned short)0)
+    - -D__INTADDR__(...)=((unsigned int)0)
+    - -D__NAN__=0.0
+    - -D__INFINITY__=0.0
+    - -D__I__=__imag__
+    - -Dtypeof(Ty0)=__typeof__(Ty0)
+
+---
+If:
+  PathMatch: [.*\.(c|h)$]
+CompileFlags:
+  Add:
+    - -include
+    - c_macros.h
+    - -std=c17
+    - -xc
+
+---
+If:
+  PathMatch: [.*\.(cc|cxx|cpp|hpp)$]
+CompileFlags:
+  Add:
+    - -isystem
+    - /opt/iar/cxarm/arm/inc/libcpp
+    - -include
+    - cxx_macros.h
+    - -std=c++20
+    - -xc++
