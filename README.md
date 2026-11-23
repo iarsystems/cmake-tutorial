@@ -109,7 +109,7 @@ mkdir build
 - Next, navigate to that build directory and run CMake to configure the project and generate a native build system using the compiler specified in the [`cxarm.cmake`](tutorial) toolchain file (if needed, edit the supplied toolchain file to match your tool):
 ```
 cd build
-cmake .. -G Ninja --toolchain ../cxarm.cmake
+cmake .. -G Ninja --toolchain ../iccarm.cmake
 ```
 
 - Then call CMake for building the executable using the build system:
